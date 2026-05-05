@@ -1,0 +1,30 @@
+<?php
+
+define('DEBUG_START_TIME', microtime(true));
+define('DEBUG_START_MEMORY', memory_get_usage());
+
+error_reporting(E_ALL);
+ini_set('display_errors', true);
+ini_set('display_startup_errors', true);
+
+define('ROOT', __DIR__);
+
+ini_set('memory_limit', '128M');
+
+date_default_timezone_set('Europe/London'); // +00:00 default.
+
+if(file_exists(ROOT . '/vendor/autoload.php')){
+    require_once ROOT . '/vendor/autoload.php';
+}
+
+spl_autoload_register(function($className){
+    $classPath = str_replace('\\', DIRECTORY_SEPARATOR, $className);
+    $classPath = trim($classPath, DIRECTORY_SEPARATOR);
+
+    $classFullPath = ROOT . DIRECTORY_SEPARATOR . "$classPath.php";
+    if(file_exists($classFullPath)){
+        return include_once $classFullPath;
+    }
+    return false;
+});
+
