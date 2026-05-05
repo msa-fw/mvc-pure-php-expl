@@ -24,9 +24,7 @@ class Router
     public function start()
     {
         foreach($this->routes as $uri => $class){
-            $uri = '/' . trim($uri, '/');
             $pattern = $this->uri2pattern($uri);
-
             if(preg_match($pattern, $this->requestUri, $match)){
                 if(!$this->runController($class, array_slice($match, 1))){
                     dbg(404);
@@ -57,6 +55,7 @@ class Router
 
     protected function uri2pattern($uri)
     {
+        $uri = '/' . trim($uri, '/');
         return preg_replace_callback_array(array(
             "#\{\p{L}+\}#usim" => function($match){ return '(\w+)'; },
             "#\[\p{L}+\]#usim" => function($match){ return '(\d+)'; },
