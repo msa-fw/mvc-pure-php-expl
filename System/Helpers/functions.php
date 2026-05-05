@@ -7,7 +7,13 @@ function dbg(...$_)
         print_r($arg);
         print "<hr>";
     }
-    exit("</pre>");
+    print "</pre>";
+}
+
+function dbgd(...$_)
+{
+    dbg(...$_);
+    exit();
 }
 
 function classesAutoloader($className){

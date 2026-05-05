@@ -6,12 +6,15 @@ use Controllers\Home\HomeController;
 
 class Index extends HomeController
 {
-    public function __construct()
-    {}
-
     public function get()
     {
-        dbg(__METHOD__, func_get_args());
+        $this->redirect('https://google.com');
+
+        $this->response->content()->write([
+            'method' => __METHOD__,
+            'arguments' => func_get_args(),
+            'request' => $this->request->request('id')->read(), // if URL equal to https://my.site/home/21/45?id=456
+        ]);
         return true;
     }
 

@@ -3,6 +3,7 @@
 namespace System\Core;
 
 use ReflectionMethod;
+use System\Core;
 
 class Router
 {
@@ -25,12 +26,12 @@ class Router
     {
         foreach($this->routes as $uri => $class){
             $pattern = $this->uri2pattern($uri);
-            if(preg_match($pattern, $this->requestUri, $match)){
-                if(!$this->runController($class, array_slice($match, 1))){
-                    dbg(404);
-                }
+            if(preg_match($pattern, $this->requestUri, $match) && $this->runController($class, array_slice($match, 1))){
+                return true;
             }
         }
+        Core::Response()->code()->write(404);
+        return false;
     }
 
     protected function runController($className, array $arguments = [])

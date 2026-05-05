@@ -2,5 +2,7 @@
 
 namespace Controllers\Home;
 
-class HomeController
+use System\Core\Controller;
+
+class HomeController extends Controller
 {}

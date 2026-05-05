@@ -7,6 +7,7 @@ namespace System;
  * @package System
  *
  * @method static|Core\Request Request()
+ * @method static|Core\Response Response()
  */
 class Core
 {
