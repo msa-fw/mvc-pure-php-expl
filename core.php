@@ -13,18 +13,11 @@ ini_set('memory_limit', '128M');
 
 date_default_timezone_set('Europe/London'); // +00:00 default.
 
+include_once ROOT . "/System/Helpers/functions.php";
+
 if(file_exists(ROOT . '/vendor/autoload.php')){
     require_once ROOT . '/vendor/autoload.php';
 }
 
-spl_autoload_register(function($className){
-    $classPath = str_replace('\\', DIRECTORY_SEPARATOR, $className);
-    $classPath = trim($classPath, DIRECTORY_SEPARATOR);
-
-    $classFullPath = ROOT . DIRECTORY_SEPARATOR . "$classPath.php";
-    if(file_exists($classFullPath)){
-        return include_once $classFullPath;
-    }
-    return false;
-});
+spl_autoload_register('classesAutoloader');
 
