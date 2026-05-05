@@ -8,6 +8,7 @@ ini_set('display_errors', true);
 ini_set('display_startup_errors', true);
 
 define('ROOT', __DIR__);
+define('WEB', ROOT . "/web");
 
 ini_set('memory_limit', '128M');
 

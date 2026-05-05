@@ -26,3 +26,11 @@ function classesAutoloader($className){
     }
     return false;
 }
+
+function render($file, array $content)
+{
+    ob_start();
+    extract($content);
+    include $file;
+    return trim(ob_get_clean());
+}

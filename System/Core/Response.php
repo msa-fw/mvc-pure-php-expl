@@ -12,6 +12,9 @@ use System\Helpers\Classes\Search;
  * @method Search code()
  * @method Search content(...$_)
  * @method Search headers(...$_)
+ *
+ * @method Search class()
+ * @method Search template()
  */
 class Response
 {

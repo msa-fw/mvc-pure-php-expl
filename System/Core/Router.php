@@ -12,8 +12,12 @@ class Router
 
     protected $routes = [];
 
+    protected $response;
+
     public function __construct($requestMethod, $requestUri)
     {
+        $this->response = Core::Response();
+
         $this->requestMethod = $requestMethod;
 
         $requestUri = '/' . trim($requestUri, '/');
@@ -26,26 +30,29 @@ class Router
     {
         foreach($this->routes as $uri => $class){
             $pattern = $this->uri2pattern($uri);
-            if(preg_match($pattern, $this->requestUri, $match) && $this->runController($class, array_slice($match, 1))){
+            if(preg_match($pattern, $this->requestUri, $match) && $this->runController($class, $this->requestMethod, array_slice($match, 1))){
                 return true;
             }
         }
-        Core::Response()->code()->write(404);
+        $this->response->code()->write(404);
         return false;
     }
 
-    protected function runController($className, array $arguments = [])
+    protected function runController($className, $method, array $arguments = [])
     {
-        if(!method_exists($className, $this->requestMethod)){
+        if(!method_exists($className, $method)){
             return false;
         }
 
-        if(count($arguments) < $this->getRequiredParams($className, $this->requestMethod)){
+        if(count($arguments) < $this->getRequiredParams($className, $method)){
             return false;
         }
+
+        $this->response->class()->write($className);
+        $this->response->template()->write(str_replace('\\', DIRECTORY_SEPARATOR, $className));
 
         $object = new $className();
-        return call_user_func_array([$object, $this->requestMethod], $arguments);
+        return call_user_func_array([$object, $method], $arguments);
     }
 
     protected function getRequiredParams($class, $method)

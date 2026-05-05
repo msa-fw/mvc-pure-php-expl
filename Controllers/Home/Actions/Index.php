@@ -8,8 +8,6 @@ class Index extends HomeController
 {
     public function get()
     {
-        $this->redirect('https://google.com');
-
         $this->response->content()->write([
             'method' => __METHOD__,
             'arguments' => func_get_args(),

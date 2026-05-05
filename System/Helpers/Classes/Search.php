@@ -20,6 +20,10 @@ class Search
         return $clone;
     }
 
+    /**
+     * @param null $alt
+     * @return mixed|null|array|int|string
+     */
     public function read($alt = null)
     {
         return $this->subject ? $this->subject : $alt;
