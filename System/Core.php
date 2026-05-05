@@ -9,6 +9,7 @@ namespace System;
  * @method static|Core\Config Config()
  * @method static|Core\Request Request()
  * @method static|Core\Response Response()
+ * @method static|Core\Session Session()
  */
 class Core
 {

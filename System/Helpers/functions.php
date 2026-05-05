@@ -34,3 +34,20 @@ function render($file, array $content)
     include $file;
     return trim(ob_get_clean());
 }
+
+function generate($length = 128, ...$arguments)
+{
+    if(!$arguments){
+        $arguments = array(range(0, 9), range('a', 'z'), range('A', 'Z'));
+    }
+
+    $arguments = array_merge(...$arguments);
+    $max = count($arguments)-1;
+
+    $gen = '';
+    for ($i = 0; $i < $length; $i++) {
+        $gen .= $arguments[rand(0, $max)];
+    }
+
+    return $gen;
+}

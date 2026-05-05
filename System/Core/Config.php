@@ -10,6 +10,7 @@ use System\Helpers\Classes\Search;
  * @package System\Core
  *
  * @method Search template(...$_)
+ * @method Search session(...$_)
  */
 class Config
 {
