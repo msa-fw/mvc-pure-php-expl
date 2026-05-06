@@ -1,5 +1,9 @@
 <?php
 
+foreach(glob(ROOT . "/System/Helpers/functions/*.php") as $file){
+    include_once $file;
+}
+
 function dbg(...$_)
 {
     print "<pre>";
