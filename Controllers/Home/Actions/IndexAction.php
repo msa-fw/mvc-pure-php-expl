@@ -4,7 +4,7 @@ namespace Controllers\Home\Actions;
 
 use Controllers\Home\HomeController;
 
-class Index extends HomeController
+class IndexAction extends HomeController
 {
     public function get()
     {

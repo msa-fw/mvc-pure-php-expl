@@ -7,6 +7,7 @@ namespace System;
  * @package System
  *
  * @method static|Core\Config Config()
+ * @method static|Core\Database Database()
  * @method static|Core\Request Request()
  * @method static|Core\Response Response()
  * @method static|Core\Session Session()

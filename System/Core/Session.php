@@ -20,6 +20,7 @@ class Session
     use Collect;
 
     protected $newUser;
+    protected $sessionName;
     protected $sessionDirectory;
     protected $sessionIdentifier;
 
@@ -31,9 +32,9 @@ class Session
         $this->config = Core::Config();
         $this->request = Core::Request();
 
-        $sessionName = $this->config->session('sessionName')->read('');
+        $this->sessionName = $this->config->session('sessionName')->read('');
 
-        if(!($this->sessionIdentifier = $this->request->cookies($sessionName)->read())){
+        if(!($this->sessionIdentifier = $this->request->cookies($this->sessionName)->read())){
             $this->newUser = true;
             $this->sessionIdentifier = generate(64);
         }
@@ -48,11 +49,11 @@ class Session
             mkdir($this->sessionDirectory, 0755, true);
         }
 
-        ini_set('session.gc_maxlifetime', $this->config->session('sessionLifeTime')->read());
-        ini_set('session.cookie_lifetime', $this->config->session('sessionLifeTime')->read());
+        ini_set('session.gc_maxlifetime', $this->config->session('sessionLifeTime')->read(300));
+        ini_set('session.cookie_lifetime', $this->config->session('sessionLifeTime')->read(300));
         ini_set('session.cookie_domain', $this->config->session('sessionDomain')->read());
 
-        session_name($this->config->session('sessionName')->read());
+        session_name($this->sessionName);
         session_save_path($this->sessionDirectory);
         session_id($this->sessionIdentifier);
         session_start();
@@ -61,5 +62,4 @@ class Session
 
         return $this;
     }
-
 }

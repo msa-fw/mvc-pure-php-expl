@@ -11,6 +11,7 @@ use System\Helpers\Classes\Search;
  *
  * @method Search template(...$_)
  * @method Search session(...$_)
+ * @method Search database(...$_)
  */
 class Config
 {
