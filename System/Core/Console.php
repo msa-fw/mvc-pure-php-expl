@@ -2,27 +2,28 @@
 
 namespace System\Core;
 
-use function language\translate;
 use ReflectionMethod;
+use System\Core;
 use function console\danger;
 use function console\warning;
+use function language\translate;
 use function module\loadControllersOptions;
 
 class Console
 {
     protected $requestCommand;
 
-    protected $routes = [];
+    protected $commands = [];
 
     public function __construct($requestCommand)
     {
         $this->requestCommand = $requestCommand;
-        $this->routes = loadControllersOptions('commands.php');
+        $this->commands = loadControllersOptions('commands.php');
     }
 
     public function start()
     {
-        foreach($this->routes as $command => $action){
+        foreach($this->commands as $command => $action){
             list($class, $method) = $action;
 
             $pattern = $this->command2pattern($command);
@@ -46,8 +47,14 @@ class Console
             return true;
         }
 
+        Core::Events()->beforeCommandStart()->run();
+
         $object = new $className();
-        return call_user_func_array([$object, $method], $arguments);
+        $result = call_user_func_array([$object, $method], $arguments);
+
+        Core::Events()->afterCommandStart()->run();
+
+        return $result;
     }
 
     protected function getRequiredParams($class, $method)

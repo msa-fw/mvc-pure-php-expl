@@ -52,8 +52,14 @@ class Router
         $this->response->class()->write($className);
         $this->response->template()->write(str_replace('\\', DIRECTORY_SEPARATOR, $className));
 
+        Core::Events()->beforeControllerStart()->run();
+
         $object = new $className();
-        return call_user_func_array([$object, $method], $arguments);
+        $result = call_user_func_array([$object, $method], $arguments);
+
+        Core::Events()->afterControllerStart()->run();
+
+        return $result;
     }
 
     protected function getRequiredParams($class, $method)

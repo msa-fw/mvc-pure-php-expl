@@ -2,6 +2,7 @@
 
 namespace System\Core;
 
+use System\Core;
 use System\Helpers\Traits\Collect;
 use System\Helpers\Classes\Search;
 use function module\loadControllersOptions;
@@ -21,6 +22,10 @@ class Config
 
     public function initialize()
     {
+        Core::Events()->beforeConfigInitialized()->run();
+
         loadControllersOptions('config.php');
+
+        Core::Events()->afterConfigInitialized()->run();
     }
 }

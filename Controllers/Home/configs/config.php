@@ -7,6 +7,17 @@
 \System\Core::Config()->template()->write([
     'theme' => 'default',
     'renderClass' => \System\Core\Template\HTML::class,
+    'allowedRequestMethods' => [
+        'GET',
+        'POST',
+        'PUT',
+        'DELETE',
+        'PATCH',
+        'OPTIONS',
+        'HEAD',
+        'CONNECT',
+        'TRACE'
+    ]
 ]);
 
 \System\Core::Config()->session()->write([

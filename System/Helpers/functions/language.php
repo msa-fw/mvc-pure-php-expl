@@ -4,7 +4,7 @@ namespace language;
 
 use System\Core;
 
-function translate($key, array $replacement, $returnKey = false)
+function translate($key, array $replacement = [], $returnKey = false)
 {
     $language = Core::Language();
     if($value = $language->get($key)){

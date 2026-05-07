@@ -17,8 +17,13 @@ class Template
 
     public function render()
     {
+        Core::Events()->beforeTemplateRender()->run();
+
         $result = $this->renderContent();
         $this->sendHeaders();
+
+        Core::Events()->afterTemplateRender()->run();
+
         return $result;
     }
 

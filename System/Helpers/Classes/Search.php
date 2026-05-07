@@ -35,6 +35,12 @@ class Search
         return $this;
     }
 
+    public function append($value)
+    {
+        $this->subject[] = $value;
+        return $this;
+    }
+
     public function drop()
     {
         $this->subject = null;

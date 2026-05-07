@@ -42,6 +42,8 @@ class Session
 
     public function initialize()
     {
+        Core::Events()->beforeSessionStart()->run();
+
         $sessionDirectory = $this->config->session('sessionDirectory')->read('');
         $this->sessionDirectory = ROOT . '/' . trim($sessionDirectory, '/');
 
@@ -59,6 +61,8 @@ class Session
         session_start();
 
         $this->subject = &$_SESSION;
+
+        Core::Events()->afterSessionStart()->run();
 
         return $this;
     }

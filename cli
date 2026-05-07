@@ -9,6 +9,8 @@ define('CLI_MODE', true);
 
 include_once "core.php";
 
+\System\Core::Events()->initialize();
+
 \System\Core::Config()->initialize();
 
 $argv = array_slice($argv, 1);

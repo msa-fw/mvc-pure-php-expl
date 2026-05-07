@@ -2,6 +2,8 @@
 
 include_once "../core.php";
 
+\System\Core::Events()->initialize();
+
 \System\Core::Config()->initialize();
 \System\Core::Session()->initialize();
 
