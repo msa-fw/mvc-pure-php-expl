@@ -2,9 +2,11 @@
 
 namespace System\Core;
 
+use function language\translate;
 use ReflectionMethod;
 use function console\danger;
 use function console\warning;
+use function module\loadControllersOptions;
 
 class Console
 {
@@ -15,7 +17,7 @@ class Console
     public function __construct($requestCommand)
     {
         $this->requestCommand = $requestCommand;
-        $this->routes = include ROOT . "/configs/commands.php";
+        $this->routes = loadControllersOptions('commands.php');
     }
 
     public function start()
@@ -28,19 +30,19 @@ class Console
                 return true;
             }
         }
-        print danger("Command `{$this->requestCommand}` not found!");
+        print danger(translate('cmd.commandNotFound', ['%cmd%' => $this->requestCommand], true));
         return false;
     }
 
     protected function runCommand($className, $method, array $arguments = [])
     {
         if(!method_exists($className, $method)){
-            print warning("Undefined method `{$className}::{$method}()`!");
+            print warning(translate('cmd.undefinedMethod', ['%method%' => "{$className}::{$method}()"], true));
             return true;
         }
 
         if(count($arguments) < $this->getRequiredParams($className, $method)){
-            print warning("Difference of required params for method `{$className}::{$method}()`!");
+            print warning(translate('cmd.differenceArguments', ['%method%' => "{$className}::{$method}()"], true));
             return true;
         }
 

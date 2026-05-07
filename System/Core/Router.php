@@ -4,6 +4,7 @@ namespace System\Core;
 
 use ReflectionMethod;
 use System\Core;
+use function module\loadControllersOptions;
 
 class Router
 {
@@ -23,7 +24,7 @@ class Router
         $requestUri = '/' . trim($requestUri, '/');
         $this->requestUri = parse_url($requestUri, PHP_URL_PATH);
 
-        $this->routes = include ROOT . "/configs/routes.php";
+        $this->routes = loadControllersOptions('routes.php');
     }
 
     public function start()

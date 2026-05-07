@@ -4,6 +4,7 @@ namespace System\Core;
 
 use System\Helpers\Traits\Collect;
 use System\Helpers\Classes\Search;
+use function module\loadControllersOptions;
 
 /**
  * Class Config
@@ -12,13 +13,14 @@ use System\Helpers\Classes\Search;
  * @method Search template(...$_)
  * @method Search session(...$_)
  * @method Search database(...$_)
+ * @method Search general(...$_)
  */
 class Config
 {
     use Collect;
 
-    public function initialize($configFile = "/configs/config.php")
+    public function initialize()
     {
-        include ROOT . $configFile;
+        loadControllersOptions('config.php');
     }
 }
