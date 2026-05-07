@@ -2,8 +2,6 @@
 
 namespace System\Core\Events;
 
-use System\Helpers\Classes\Search;
-
 class Manager
 {
     protected $event;
@@ -19,13 +17,12 @@ class Manager
 
     public function add($class, $method = 'exec', $active = true)
     {
-        $collection = new Search($this->events);
-        $collection->find($this->event)->append([
+        $this->events[$this->event][] = [
             'class' => $class,
             'method' => $method,
             'status' => $active,
             'arguments' => $this->arguments,
-        ]);
+        ];
     }
 
     public function run()

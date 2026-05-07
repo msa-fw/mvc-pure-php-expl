@@ -5,7 +5,7 @@
  * @example: php cli home:test oooo:nanananana
  */
 
-define('CLI_MODE', true);
+define('CLI_MODE', $argv[0]);
 
 include_once "core.php";
 
