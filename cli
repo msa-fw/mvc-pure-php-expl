@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @example: php cli home:test
+ * @example: php cli home:test oooo:nanananana
+ */
+
+define('CLI_MODE', true);
+
+include_once "core.php";
+
+\System\Core::Config()->initialize();
+
+$argv = array_slice($argv, 1);
+$argv = array_map('trim', $argv);
+
+$console = new \System\Core\Console(implode(' ', $argv));
+$console->start();

@@ -6,12 +6,20 @@ foreach(glob(ROOT . "/System/Helpers/functions/*.php") as $file){
 
 function dbg(...$_)
 {
-    print "<pre>";
+    $header = "<pre>";
+    $footer = "</pre>";
+    $limit = "<hr>";
+    if(defined('CLI_MODE')){
+        $header = $footer = str_repeat('=', 100) . PHP_EOL;
+        $limit =  PHP_EOL. str_repeat('-', 100) . PHP_EOL;
+    }
+
+    print $header;
     foreach($_ as $arg){
         print_r($arg);
-        print "<hr>";
+        print $limit;
     }
-    print "</pre>";
+    print $footer;
 }
 
 function dbgd(...$_)
