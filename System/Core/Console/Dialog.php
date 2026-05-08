@@ -6,19 +6,23 @@ class Dialog
 {
     protected $valid;
     protected $answer;
-    protected $question;
 
     public function __construct($question)
     {
-        $this->question = $question;
+        print $question . ": > ";
+        $this->answer = trim(fgets(STDIN));
+        return $this;
     }
 
     public function validate(callable $function)
     {
-        print $this->question . ": > ";
-        $this->answer = trim(fgets(STDIN));
         $this->valid = call_user_func($function, $this->answer);
         return $this;
+    }
+
+    public function answer()
+    {
+        return $this->answer;
     }
 
     public function valid()

@@ -8,11 +8,16 @@ use function console\success;
 
 class DialogTestCommand
 {
+    protected $command;
+    protected $params = [];
+    
     protected $answer = 'Oooo Nanananana';
     protected $question = 'How are you?';
 
-    public function __construct()
+    public function __construct($command, array $params)
     {
+        $this->command = $command;
+        $this->params = $params;
     }
 
     public function exec()

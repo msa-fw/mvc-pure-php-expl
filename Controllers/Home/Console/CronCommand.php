@@ -13,15 +13,23 @@ use function module\loadControllersOptions;
 
 class CronCommand
 {
-    protected $timeout = 86400;             // redefine in child class if need increase value
-    protected $commandRun = 'cron:run';     // redefine in child class if need use custom command
-    protected $commandExec = 'cron:exec';   // redefine in child class if need use custom command
+    protected $command;
+    protected $params = [];
+
+    protected $timeout = 86400;
     protected $cronTasksDirectory = ROOT . "/../tmp/cron";
 
     protected $tasks = [];
 
-    public function __construct()
+    public function __construct($command, array $params)
     {
+        $this->command = $command;
+        $this->params = $params;
+
+        if(isset($this->params['timeout'])){
+            $this->timeout = $this->params['timeout'];
+        }
+
         loadControllersOptions('cron.php');
 
         $this->tasks = Core::Cron()->getAll();
@@ -31,11 +39,22 @@ class CronCommand
         }
     }
 
-    public function run()
+    public function exec($key = null)
+    {
+        if(isset($this->params['single'])){
+            if(isset($this->params['silent'])){
+                return $this->executeCronTask($key);
+            }
+            return $this->runCronTask($key);
+        }
+        return $this->runCommonList();
+    }
+
+    public function runCommonList()
     {
         $processes = [];
         foreach($this->tasks as $key => $task){
-            $command = [PHP_BINARY, CLI_MODE, $this->commandRun, $key];
+            $command = [PHP_BINARY, CLI_MODE, $this->command, "--single", $key];
             $commandString = implode(' ', $command);
 
             if(!$this->checkCronTask($key, $task, $commandString)){ continue; }
@@ -53,7 +72,7 @@ class CronCommand
             foreach($processes as $key => $process){
                 /** @var Process $process */
 
-                usleep(10);
+                usleep(100000);
 
                 if($process->isRunning()){
                     try{
@@ -74,13 +93,6 @@ class CronCommand
         return true;
     }
 
-    /**
-     * Child method
-     *
-     * @see CronCommand::run() as parent
-     * @param $key
-     * @return bool
-     */
     public function runCronTask($key)
     {
         if(isset($this->tasks[$key])){
@@ -90,25 +102,22 @@ class CronCommand
                 'start' => time()
             ], true);
 
-            $command = [PHP_BINARY, CLI_MODE, $this->commandExec, $key];
-            $result = shell_exec(implode(' ', $command));
+            $command = [PHP_BINARY, CLI_MODE, $this->command, "--single", "--silent", $key];
+            $command = implode(' ', $command);
+
+            print $command . PHP_EOL;
+
+            $result = shell_exec($command);
 
             $this->updateCronTaskFile($taskFile, [
                 'stop' => time(),
-                'result' => $result]
-            );
+                'result' => $result
+            ]);
             return true;
         }
         return false;
     }
 
-    /**
-     * Run from shell_exec() for skip errors and save result
-     *
-     * @see CronCommand::runCronTask()
-     * @param $key
-     * @return bool|mixed
-     */
     public function executeCronTask($key)
     {
         if(isset($this->tasks[$key])){

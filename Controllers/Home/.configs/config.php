@@ -28,7 +28,7 @@
 ]);
 
 \System\Core::Config()->database('default')->write([
-    'driver' => 'mysql',
+    'driver' => '[MYSQL_DRIVER]',
     'locale' => 'en_US',
     'charset' => 'utf8mb4',
     'collate' => 'utf8mb4_unicode_520_ci',

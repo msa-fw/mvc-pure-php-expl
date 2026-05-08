@@ -21,8 +21,9 @@ class Router
 
         $this->requestMethod = $requestMethod;
 
-        $requestUri = '/' . trim($requestUri, '/');
-        $this->requestUri = parse_url($requestUri, PHP_URL_PATH);
+        $requestUri = urldecode($requestUri);
+        $requestUri = parse_url($requestUri, PHP_URL_PATH);
+        $this->requestUri = '/' . trim($requestUri, '/');
 
         $this->routes = loadControllersOptions('routes.php');
     }

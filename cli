@@ -2,14 +2,14 @@
 
 define('CLI_MODE', __FILE__);
 
-include_once "core.php";
+include_once __DIR__ . "/core.php";
 
 \System\Core::Events()->initialize();
 
 \System\Core::Config()->initialize();
 
 $argv = array_slice($argv, 1);
-$argv = array_map('trim', $argv);
+//$argv = array_map('trim', $argv);
 
-$console = new \System\Core\Console(implode(' ', $argv));
+$console = new \System\Core\Console($argv);
 $console->start();

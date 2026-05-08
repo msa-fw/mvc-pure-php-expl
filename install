@@ -1,0 +1,150 @@
+<?php
+
+use System\Core\Database;
+use System\Core\Console\Dialog;
+
+define('CLI_MODE', __FILE__);
+
+include_once __DIR__ . "/core.php";
+
+new install();
+
+class install
+{
+    protected $config = [
+        'driver' => null,
+        'locale' => 'en_US',
+        'charset' => 'utf8mb4',
+        'collate' => 'utf8mb4_unicode_520_ci',
+        'engine' => 'MyISAM',
+        'host' => null,
+        'port' => null,
+        'user' => null,
+        'pass' => null,
+        'base' => null,
+        'socket' => null,
+        'databaseMode' => [
+            'STRICT_TRANS_TABLES',
+            'NO_ZERO_IN_DATE',
+            'NO_ZERO_DATE',
+            'ERROR_FOR_DIVISION_BY_ZERO',
+            'NO_ENGINE_SUBSTITUTION',
+        ],
+    ];
+
+    public function __construct()
+    {
+        $this->setDatabase();
+        if($this->saveConfig()){
+            $this->copyFiles();
+            $this->installDependencies();
+
+            return unlink(__FILE__);
+        }
+        throw new Exception("Some error");
+    }
+
+    protected function setDatabase()
+    {
+        $this->setDbDriver();
+        $this->setDbHost();
+        $this->setDbPort();
+        $this->setDbUser();
+        $this->setDbPassword();
+        $this->setDbDatabase();
+
+        try{
+            $database = new Database();
+            $connection = $database->new('test', $this->config);
+
+            if($connection->execute('show databases')->all()){
+                print \console\success("Connection to DB: OK");
+                return true;
+            }
+        }catch(Exception $exception){
+            print \console\danger($exception->getMessage());
+            $this->setDatabase();
+        }
+        return false;
+    }
+
+    protected function saveConfig()
+    {
+        $configFile = ROOT . "/Controllers/Home/.configs/config.php";
+        if(file_exists($configFile)){
+            $content = file_get_contents($configFile);
+
+            $content = preg_replace("#\'driver\'\s+\=\>\s+\'\[MYSQL_DRIVER\]\'\,#usm", "'driver' => '{$this->config['driver']}',", $content);
+            $content = preg_replace("#\'host\'\s+\=\>\s+\'\[MYSQL_HOST\]\'\,#usm", "'host' => '{$this->config['host']}',", $content);
+            $content = preg_replace("#\'port\'\s+\=\>\s+\'\[MYSQL_PORT\]\'\,#usm", "'port' => '{$this->config['port']}',", $content);
+            $content = preg_replace("#\'user\'\s+\=\>\s+\'\[MYSQL_USER\]\'\,#usm", "'user' => '{$this->config['user']}',", $content);
+            $content = preg_replace("#\'pass\'\s+\=\>\s+\'\[MYSQL_PASSWORD\]\'\,#usm", "'pass' => '{$this->config['pass']}',", $content);
+            $content = preg_replace("#\'base\'\s+\=\>\s+\'\[MYSQL_DATABASE\]\'\,#usm", "'base' => '{$this->config['base']}',", $content);
+
+            if(file_put_contents($configFile, $content)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected function copyFiles()
+    {
+        if(!is_dir(ROOT . "/Controllers/Home/configs")){
+            mkdir(ROOT . "/Controllers/Home/configs", 0755, true);
+        }
+
+        foreach(glob(ROOT . "/Controllers/Home/.configs/*") as $file){
+            $newPath = str_replace('/.configs/', '/configs/', $file);
+            rename($file, $newPath);
+        }
+
+        rmdir(ROOT . "/Controllers/Home/.configs");
+
+        return $this;
+    }
+
+    protected function installDependencies()
+    {
+        $output = shell_exec("composer --working-dir=" . __DIR__ . " install");
+        print \console\success($output);
+        return $this;
+    }
+
+    protected function setDbDriver()
+    {
+        $dialog = new Dialog("Enter Database driver (def: mysql)");
+        $this->config['driver'] = $dialog->answer() ?: 'mysql';
+        return $this;
+    }
+    protected function setDbHost()
+    {
+        $dialog = new Dialog("Enter Database host (def: localhost)");
+        $this->config['host'] = $dialog->answer() ?: 'localhost';
+        return $this;
+    }
+    protected function setDbPort()
+    {
+        $dialog = new Dialog("Enter Database port (def: 3306)");
+        $this->config['port'] = $dialog->answer() ?: 3306;
+        return $this;
+    }
+    protected function setDbUser()
+    {
+        $dialog = new Dialog("Enter Database user");
+        $this->config['user'] = $dialog->answer();
+        return $this;
+    }
+    protected function setDbPassword()
+    {
+        $dialog = new Dialog("Enter Database password");
+        $this->config['pass'] = $dialog->answer();
+        return $this;
+    }
+    protected function setDbDatabase()
+    {
+        $dialog = new Dialog("Enter Database database name (or leave empty)");
+        $this->config['base'] = $dialog->answer() ?: '';
+        return $this;
+    }
+}

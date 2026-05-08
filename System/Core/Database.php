@@ -25,17 +25,22 @@ class Database
     {
         if($config = $this->config->database($connection)->read([])){
             if(!isset($this->connections[$connection])){
-                $this->new($connection, $config);
+                return $this->new($connection, $config);
             }
             return $this->connections[$connection];
         }
         throw new \Exception("Undefined config key `{$connection}`");
     }
 
+    /**
+     * @param $connection
+     * @param array $config
+     * @return Connection
+     */
     public function new($connection, array $config)
     {
         $this->connections[$connection] = new Connection($config);
-        return $this;
+        return $this->connections[$connection];
     }
 
     public function drop($connection)

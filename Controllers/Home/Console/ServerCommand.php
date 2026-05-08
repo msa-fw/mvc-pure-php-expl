@@ -2,9 +2,7 @@
 
 namespace Controllers\Home\Console;
 
-use function language\translate;
-
-class IndexCommand
+class ServerCommand
 {
     protected $command;
     protected $params = [];
@@ -15,9 +13,9 @@ class IndexCommand
         $this->params = $params;
     }
 
-    public function exec($test, $second = true)
+    public function exec($host = '127.0.0.1:8080')
     {
-        dbg([__METHOD__ => func_get_args()], translate('home.test'));
+        shell_exec(PHP_BINARY . " -S $host " . ROOT . "/server.php");
         return true;
     }
 }

@@ -24,32 +24,35 @@ class Console
     public function start()
     {
         foreach($this->commands as $command => $action){
-            list($class, $method) = $action;
-
-            $pattern = $this->command2pattern($command);
-            if(preg_match($pattern, $this->requestCommand, $match) && $this->runCommand($class, $method, array_slice($match, 1))){
-                return true;
+            if(preg_match("#^$command$#usim", $this->requestCommand[0])){
+                if($this->runCommand($command, array_slice($this->requestCommand, 1))){
+                    return true;
+                }
             }
         }
-        print danger(translate('cmd.commandNotFound', ['%cmd%' => $this->requestCommand], true));
+        print danger(translate('cmd.commandNotFound', ['%cmd%' => implode(' ', $this->requestCommand)], true));
         return false;
     }
 
-    protected function runCommand($className, $method, array $arguments = [])
+    protected function runCommand($command, array $arguments = [])
     {
-        if(!method_exists($className, $method)){
-            print warning(translate('cmd.undefinedMethod', ['%method%' => "{$className}::{$method}()"], true));
+        list($class, $method) = $this->commands[$command];
+
+        if(!method_exists($class, $method)){
+            print warning(translate('cmd.undefinedMethod', ['%method%' => "{$class}::{$method}()"], true));
             return true;
         }
 
-        if(count($arguments) < $this->getRequiredParams($className, $method)){
-            print warning(translate('cmd.differenceArguments', ['%method%' => "{$className}::{$method}()"], true));
+        if(count($arguments) < $this->getRequiredParams($class, $method)){
+            print warning(translate('cmd.differenceArguments', ['%method%' => "{$class}::{$method}()"], true));
             return true;
         }
 
         Core::Events()->beforeCommandStart()->run();
 
-        $object = new $className();
+        $params = $this->extractParamsFromArguments($arguments);
+
+        $object = new $class($command, $params);
         $result = call_user_func_array([$object, $method], $arguments);
 
         Core::Events()->afterCommandStart()->run();
@@ -63,11 +66,18 @@ class Console
         return $reflection->getNumberOfRequiredParameters();
     }
 
-    protected function command2pattern($command)
+    protected function extractParamsFromArguments(array &$arguments)
     {
-        return preg_replace_callback_array(array(
-            "#\{\p{L}+\}#usim" => function($match){ return '(\w+)'; },
-            "#\[\p{L}+\]#usim" => function($match){ return '(\d+)'; },
-        ), "#^$command$#usim");
+        $params = [];
+        foreach($arguments as $index => $argument){
+            if(strpos($argument, '--') !== false){
+                $argument = ltrim($argument, '-');
+                $tmp = array_map('trim', explode('=', $argument));
+                $params[$tmp[0]] = isset($tmp[1]) ? $tmp[1] : true;
+                unset($arguments[$index]);
+            }
+        }
+        $arguments = array_values($arguments);
+        return $params;
     }
 }
