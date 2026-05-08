@@ -1,5 +1,6 @@
 .git
 .idea
+.htaccess
 composer.lock
 /vendor
 /Controllers/Home/configs

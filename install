@@ -99,6 +99,7 @@ class install
             rename($file, $newPath);
         }
 
+        rename(ROOT . "/_.htaccess", ROOT . "/.htaccess");
         rmdir(ROOT . "/Controllers/Home/.configs");
 
         return $this;
