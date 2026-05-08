@@ -13,10 +13,12 @@ class Router
 
     protected $routes = [];
 
+    protected $config;
     protected $response;
 
     public function __construct($requestMethod, $requestUri)
     {
+        $this->config = Core::Config();
         $this->response = Core::Response();
 
         $this->requestMethod = $requestMethod;
@@ -42,6 +44,10 @@ class Router
 
     protected function runController($className, $method, array $arguments = [])
     {
+        if(!$this->checkControllerActiveStatus($className)){
+            return false;
+        }
+
         if(!method_exists($className, $method)){
             return false;
         }
@@ -61,6 +67,14 @@ class Router
         Core::Events()->afterControllerStart()->run();
 
         return $result;
+    }
+
+    protected function checkControllerActiveStatus($className)
+    {
+        if(preg_match("#Controllers\\\\(\w+)#usim", $className, $match)){
+            return $this->config->controller($match[1], 'active')->read();
+        }
+        return true;
     }
 
     protected function getRequiredParams($class, $method)

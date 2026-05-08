@@ -1,5 +1,7 @@
 <?php
 
+\System\Core::Config()->controller('Home')->write(['active' => true]);
+
 \System\Core::Config()->general()->write([
     'language' => 'en',
 ]);

@@ -16,4 +16,6 @@ return [
 
     'cron.processesLeft' => 'Залишилось %total% процесів',
     'cron.processDoneProcessesLeft' => 'Процес %cmd% завершено (залишилось %total%)',
+
+    'cli.make.fileSavedToPath' => 'Файл `%target%` успішно збережено до `%destination%`',
 ];

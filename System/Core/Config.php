@@ -15,6 +15,7 @@ use function module\loadControllersOptions;
  * @method Search session(...$_)
  * @method Search database(...$_)
  * @method Search general(...$_)
+ * @method Search controller(...$_)
  */
 class Config
 {
