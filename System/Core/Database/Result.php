@@ -18,14 +18,16 @@ class Result
         return $this->statement;
     }
 
-    public function first()
+    public function first($object = false)
     {
-        return $this->statement->fetch(\PDO::FETCH_ASSOC);
+        $style = $object ? \PDO::FETCH_OBJ : \PDO::FETCH_ASSOC;
+        return $this->statement->fetch($style);
     }
 
-    public function all()
+    public function all($object = false)
     {
-        return $this->statement->fetchAll(\PDO::FETCH_ASSOC);
+        $style = $object ? \PDO::FETCH_OBJ : \PDO::FETCH_ASSOC;
+        return $this->statement->fetchAll($style);
     }
 
     public function rows()

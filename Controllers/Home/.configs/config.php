@@ -28,16 +28,16 @@
 ]);
 
 \System\Core::Config()->database('default')->write([
-    'driver' => 'driver',
+    'driver' => 'mysql',
     'locale' => 'en_US',
     'charset' => 'utf8mb4',
     'collate' => 'utf8mb4_unicode_520_ci',
     'engine' => 'MyISAM',
-    'host' => 'localhost',
-    'user' => 'root',
-    'pass' => '123',
-    'base' => 'test_db',
-    'port' => '3306',
+    'host' => '[MYSQL_HOST]',
+    'port' => '[MYSQL_PORT]',
+    'user' => '[MYSQL_USER]',
+    'pass' => '[MYSQL_PASSWORD]',
+    'base' => '[MYSQL_DATABASE]',
     'socket' => null,
     'databaseMode' => [
         'STRICT_TRANS_TABLES',
