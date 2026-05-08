@@ -13,4 +13,7 @@ return [
 
     'cron.cronTaskNotReady' => 'Задача %task% не готова, попробуйте позже...',
     'cron.cronTaskNotReadyByStop' => 'Задача %task% не готова (без стоп метки), попробуйте позже...',
+
+    'cron.processesLeft' => 'Осталось %total% процессов',
+    'cron.processDoneProcessesLeft' => 'Процесс %cmd% завершен (осталось %total%)',
 ];

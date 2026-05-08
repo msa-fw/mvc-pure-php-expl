@@ -1,11 +1,6 @@
 <?php
 
-/**
- * @example: php cli home:test
- * @example: php cli home:test oooo:nanananana
- */
-
-define('CLI_MODE', $argv[0]);
+define('CLI_MODE', __FILE__);
 
 include_once "core.php";
 

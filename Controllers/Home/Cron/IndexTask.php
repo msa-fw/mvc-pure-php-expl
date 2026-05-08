@@ -10,8 +10,11 @@ class IndexTask
 
     public function exec()
     {
-        dbg(__METHOD__);
-        sleep(10);
+        if(rand(0,1)){
+            throw new \Exception("Test error");
+        }
+        print(__METHOD__ . PHP_EOL);
+        sleep(rand(5,10));
         return true;
     }
 }

@@ -8,7 +8,7 @@ class Connection
 
     public function __construct(array $config)
     {
-        $connection = "mysql:host={$config['host']}";
+        $connection = "{$config['driver']}:host={$config['host']}";
         if($config['base']){
             $connection .= ";dbname={$config['base']}";
         }

@@ -50,7 +50,11 @@ function render($file, array $content)
 function generate($length = 128, ...$arguments)
 {
     if(!$arguments){
-        $arguments = array(range(0, 9), range('a', 'z'), range('A', 'Z'));
+        $arguments = [
+            range(0, 9),
+            range('a', 'z'),
+            range('A', 'Z')
+        ];
     }
 
     $arguments = array_merge(...$arguments);

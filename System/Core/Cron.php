@@ -16,9 +16,9 @@ class Cron
     {
     }
 
-    public function add($class, $method, $frequency = 3600, $timeout = 3600)
+    public function add($class, $method, $frequency = 3600, $timeout = 3600, $key = null)
     {
-        $key = md5($class . $method);
+        $key = $key ?: md5(json_encode(func_get_args()));
         $this->tasks[$key] = [
             'class' => $class,
             'method' => $method,

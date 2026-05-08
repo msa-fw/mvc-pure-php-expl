@@ -6,11 +6,14 @@ return [
     'cmd.undefinedMethod' => 'Undefined method `%method%`!',
     'cmd.differenceArguments' => 'Difference of required params for method `%method%`!',
 
-    'cron.newTask' => 'New CRON task %task%',
-    'cron.newTaskWithoutStartStamp' => 'New CRON task %task% (without start stamp)',
-    'cron.expiredByStopStamp' => 'Task %task% ready (expired by stop stamp)',
-    'cron.expiredByTimeout' => 'Task %task% ready (expired by timeout)',
+    'cron.newTask' => 'New CRON task `%task%`',
+    'cron.newTaskWithoutStartStamp' => 'New CRON task `%task%` (without start stamp)',
+    'cron.expiredByStopStamp' => 'Task `%task%` ready (expired by stop stamp)',
+    'cron.expiredByTimeout' => 'Task `%task%` ready (expired by timeout)',
 
-    'cron.cronTaskNotReady' => 'Task %task% not ready, try latter...',
-    'cron.cronTaskNotReadyByStop' => 'Task %task% not ready (by stop stamp), try latter...',
+    'cron.cronTaskNotReady' => 'Task `%task%` not ready, try latter...',
+    'cron.cronTaskNotReadyByStop' => 'Task `%task%` not ready (by stop stamp), try latter...',
+
+    'cron.processesLeft' => 'Processes left: %total%',
+    'cron.processDoneProcessesLeft' => 'Process %cmd% completed (%total% left)',
 ];
