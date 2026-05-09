@@ -11,11 +11,12 @@ use function module\loadControllersOptions;
  * Class Config
  * @package System\Core
  *
- * @method Search template(...$_)
- * @method Search session(...$_)
+ * @method Search cache(...$_)
+ * @method Search controller(...$_)
  * @method Search database(...$_)
  * @method Search general(...$_)
- * @method Search controller(...$_)
+ * @method Search session(...$_)
+ * @method Search template(...$_)
  */
 class Config
 {

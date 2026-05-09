@@ -49,3 +49,9 @@
         'NO_ENGINE_SUBSTITUTION',
     ],
 ]);
+
+\System\Core::Config()->cache()->write([
+    'ttl' => 300,
+    'enabled' => true,
+    'driver' => \System\Core\Cache\JSON::class,
+]);

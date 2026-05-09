@@ -73,13 +73,15 @@ class install
         $configFile = ROOT . "/Controllers/Home/.configs/config.php";
         if(file_exists($configFile)){
             $content = file_get_contents($configFile);
-
-            $content = preg_replace("#\'driver\'\s+\=\>\s+\'\[MYSQL_DRIVER\]\'\,#usm", "'driver' => '{$this->config['driver']}',", $content);
-            $content = preg_replace("#\'host\'\s+\=\>\s+\'\[MYSQL_HOST\]\'\,#usm", "'host' => '{$this->config['host']}',", $content);
-            $content = preg_replace("#\'port\'\s+\=\>\s+\'\[MYSQL_PORT\]\'\,#usm", "'port' => '{$this->config['port']}',", $content);
-            $content = preg_replace("#\'user\'\s+\=\>\s+\'\[MYSQL_USER\]\'\,#usm", "'user' => '{$this->config['user']}',", $content);
-            $content = preg_replace("#\'pass\'\s+\=\>\s+\'\[MYSQL_PASSWORD\]\'\,#usm", "'pass' => '{$this->config['pass']}',", $content);
-            $content = preg_replace("#\'base\'\s+\=\>\s+\'\[MYSQL_DATABASE\]\'\,#usm", "'base' => '{$this->config['base']}',", $content);
+            $replace = [
+                '[MYSQL_DRIVER]' => $this->config['driver'],
+                '[MYSQL_HOST]' => $this->config['host'],
+                '[MYSQL_PORT]' => $this->config['port'],
+                '[MYSQL_USER]' => $this->config['user'],
+                '[MYSQL_PASSWORD]' => $this->config['pass'],
+                '[MYSQL_DATABASE]' => $this->config['base'],
+            ];
+            $content = str_replace(array_keys($replace), array_values($replace), $content);
 
             if(file_put_contents($configFile, $content)){
                 return true;

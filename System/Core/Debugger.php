@@ -8,6 +8,7 @@ use System\Core\Debugger\Builder;
  * Class Debugger
  * @package System\Core
  *
+ * @method Builder cache()
  * @method Builder database()
  * @method Builder events()
  */

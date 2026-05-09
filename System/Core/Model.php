@@ -4,33 +4,33 @@ namespace System\Core;
 
 use System\Core;
 use System\Core\Database\Builder;
+use System\Helpers\Classes\Search;
 
 class Model
 {
     protected $table;
-
+    protected $cache;
     protected $connection;
 
     public static function __callStatic($name, $arguments)
     {
         $model = new static();
-        return $model->table($name)
-            ->build();
+        return $model->build($name);
     }
 
     public function __construct()
     {
+        $this->cache = Core::Cache();
         $this->connection = Core::Database()->connection();
     }
 
-    public function table($table)
+    public function build($table = null)
     {
-        $this->table = $table;
-        return $this;
+        return new Builder($table ?: $this->table, $this->connection);
     }
 
-    public function build()
+    public function collect($data)
     {
-        return new Builder($this->table, $this->connection);
+        return new Search($data);
     }
 }

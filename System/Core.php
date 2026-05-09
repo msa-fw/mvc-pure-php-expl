@@ -6,6 +6,7 @@ namespace System;
  * Class Core
  * @package System
  *
+ * @method static|Core\Cache Cache()
  * @method static|Core\Config Config()
  * @method static|Core\Cron Cron()
  * @method static|Core\Database Database()
