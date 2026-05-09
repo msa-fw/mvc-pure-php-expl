@@ -2,17 +2,23 @@
 
 namespace System\Core\Events;
 
+use System\Core;
+
 class Manager
 {
     protected $event;
     protected $arguments = [];
     protected $events = [];
 
+    protected $debugger;
+
     public function __construct($event, $arguments, &$events)
     {
         $this->event = $event;
         $this->arguments = $arguments;
         $this->events = &$events;
+
+        $this->debugger = Core::Debugger();
     }
 
     public function add($class, $method = 'exec', $active = true)
@@ -29,6 +35,7 @@ class Manager
     {
         if(isset($this->events[$this->event])){
             foreach($this->events[$this->event] as $event){
+                if(!$event['status']){ continue; }
                 $this->runEvent($event);
             }
         }
@@ -36,14 +43,16 @@ class Manager
 
     protected function runEvent(array $event)
     {
-        if(!$event['status']){ return false; }
+        $result = null;
+        $debugger = $this->debugger->events()->start("{$event['class']}::{$event['method']}");
 
         if(method_exists($event['class'], $event['method'])){
             $eventObject = new $event['class'](...$this->arguments);
 
-            return call_user_func_array([$eventObject, $event['method']], $event['arguments']);
+            $result = call_user_func_array([$eventObject, $event['method']], $event['arguments']);
         }
 
-        return false;
+        $debugger->end();
+        return $result;
     }
 }

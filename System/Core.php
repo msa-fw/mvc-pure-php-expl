@@ -9,6 +9,7 @@ namespace System;
  * @method static|Core\Config Config()
  * @method static|Core\Cron Cron()
  * @method static|Core\Database Database()
+ * @method static|Core\Debugger Debugger()
  * @method static|Core\Events Events()
  * @method static|Core\Language Language()
  * @method static|Core\Request Request()

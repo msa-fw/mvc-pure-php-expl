@@ -57,7 +57,7 @@ class install
             $database = new Database();
             $connection = $database->new('test', $this->config);
 
-            if($connection->execute('show databases')->all()){
+            if($connection->execute('show databases')->result()->all()){
                 print \console\success("Connection to DB: OK");
                 return true;
             }

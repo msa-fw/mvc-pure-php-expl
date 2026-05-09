@@ -19,7 +19,9 @@ class Controller
         $this->request = Core::Request();
         $this->response = Core::Response();
 
-        $this->offset = $this->request->request('offset')->read(0);
+        $this->offset = $this->request->request('offset')->call(function($value){
+            return is_numeric($value) ? $value : 0;    // @fix possible SQL-injection
+        })->read(0);
     }
 
     public function redirect($link)

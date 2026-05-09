@@ -37,7 +37,7 @@ class Connection
         $query .= "default_storage_engine = {$config['engine']}, \n";
         $query .= "default_tmp_storage_engine = {$config['engine']};";
 
-        $this->connection->exec($query);
+        $this->execute($query)->result();
     }
 
     public function __destruct()
@@ -59,31 +59,11 @@ class Connection
             return $matches[1];
         }, $query);
 
-        $statement = $this->connection->prepare($query);
-        foreach($sorted as $index => $value){
-            $statement->bindValue($index+1, $value, $this->detectBindingType($value));
-        }
-
-        $statement->execute();
-        return new Result($this->connection, $statement);
+        return new Statement($query, $sorted, $this->connection);
     }
 
     public function pdo()
     {
         return $this->connection;
-    }
-
-    protected function detectBindingType($binding)
-    {
-        if(is_int($binding) || is_integer($binding)){
-            return \PDO::PARAM_INT;
-        }
-        if(is_bool($binding)){
-            return \PDO::PARAM_BOOL;
-        }
-        if(is_null($binding)){
-            return \PDO::PARAM_NULL;
-        }
-        return \PDO::PARAM_STR;
     }
 }
