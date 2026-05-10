@@ -44,7 +44,7 @@ class JSON implements CommonInterface
                 $debugger->end();
                 return $content;
             }
-            $this->unset($key);
+            $this->drop($key);
         }
         return [];
     }
@@ -57,7 +57,7 @@ class JSON implements CommonInterface
         return false;
     }
 
-    public function unset($key)
+    public function drop($key)
     {
         return unlink($this->file($key));
     }
@@ -81,6 +81,7 @@ class JSON implements CommonInterface
 
     protected function file($key)
     {
+        $key = preg_replace("#\s+#usim", '', $key);
         $hash = md5($this->directory . $key);
         return "{$this->directory}/{$hash}.json";
     }

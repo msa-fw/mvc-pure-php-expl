@@ -4,7 +4,7 @@ namespace System\Core;
 
 use System\Core;
 
-class Controller
+abstract class Controller
 {
     protected $limit = 30;
     protected $offset = 0;

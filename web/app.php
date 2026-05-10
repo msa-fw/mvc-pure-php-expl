@@ -12,5 +12,3 @@ $router->start();
 
 $template = new \System\Core\Template();
 print $template->render();
-
-dbg((new \Controllers\Home\Models\HomeModel())->test());

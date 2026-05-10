@@ -11,6 +11,8 @@ function scan_callback($directory, callable $callback, $sorting_order = SCANDIR_
             $newPath = "{$directory}/{$file}";
             if(is_dir($newPath)){
                 scan_callback($newPath, $callback, $sorting_order, $context);
+
+                call_user_func($callback, $directory, $file, true);
             }else{
                 call_user_func($callback, $directory, $file, false);
             }

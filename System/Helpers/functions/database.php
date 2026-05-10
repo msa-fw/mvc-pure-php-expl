@@ -3,6 +3,7 @@
 namespace database;
 
 use System\Core;
+use System\Core\Database\Statement;
 use System\Core\Database\Expression;
 
 function raw($sql)
@@ -30,7 +31,20 @@ function compress($raw, $connection = 'default')
     return raw("COMPRESS($query)");
 }
 
-function decompress($column)
+function decompress(...$columns)
 {
-    return raw("UNCOMPRESS($column) AS $column");
+    $result = [];
+    foreach($columns as $column){
+        $result[] = "UNCOMPRESS($column) AS $column";
+    }
+    return implode(', ', $result);
+}
+
+function statement2key(Statement $statement)
+{
+    $query[] = $statement->query();
+    if($bindings = $statement->bindings()){
+        $query[] = implode(',', $bindings);
+    }
+    return implode(':', $query);
 }

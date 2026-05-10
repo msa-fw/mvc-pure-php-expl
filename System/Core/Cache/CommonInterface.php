@@ -8,7 +8,7 @@ interface CommonInterface
 
     public function set($key, $value);
 
-    public function unset($key);
+    public function drop($key);
 
     public function clear();
 }

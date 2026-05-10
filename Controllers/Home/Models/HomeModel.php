@@ -3,36 +3,20 @@
 namespace Controllers\Home\Models;
 
 use System\Core\Model;
-use System\Core\Database\Builder;
 
 /**
  * Class HomeModel
  * @package Controllers\Home\Models
  *
- * @method static|Builder Home()
+ * @method static|self Home()
  */
 class HomeModel extends Model
 {
-    protected $table = 'Home';
-
-    public function test()
+    public function test($id)
     {
-        $query = $this->build()->select();
+        $statement = $this->build()->where("id = %id%", ['%id%' => $id])
+            ->select('*');
 
-        $sql = $query->query();
-        $cache = $this->cache->find($this->table, 'list');
-
-        if($data = $cache->get($sql)){
-            dbg('cache');
-            return $this->collect($data);
-        }
-
-        if($data = $query->result()->all()){
-            dbg('DB');
-            $cache->set($sql, $data);
-            return $this->collect($data);
-        }
-
-        return [];
+        return $this->findOne($statement,'items');
     }
 }

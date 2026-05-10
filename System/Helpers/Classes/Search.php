@@ -21,12 +21,12 @@ class Search
     }
 
     /**
-     * @param null $alt
+     * @param null $default
      * @return mixed|null|array|int|string
      */
-    public function read($alt = null)
+    public function read($default = null)
     {
-        return $this->subject ? $this->subject : $alt;
+        return $this->subject ? $this->subject : $default;
     }
 
     public function write($value)

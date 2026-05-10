@@ -3,15 +3,21 @@
 namespace System\Core;
 
 use System\Core;
+use System\Core\Cache\JSON;
 use System\Core\Cache\CommonInterface;
 
 class Cache
 {
+    protected $root;
     protected $config;
+    protected $driver;
 
-    public function __construct()
+    public function __construct($root)
     {
+        $this->root = $root;
         $this->config = Core::Config()->cache();
+        $this->driver = $this->config->find('driver')
+            ->read(JSON::class);
     }
 
     /**
@@ -20,9 +26,6 @@ class Cache
      */
     public function find(...$keys)
     {
-        $driver = $this->config->find('driver')
-            ->read(\System\Core\Cache\JSON::class);
-
-        return new $driver($this->config, ...$keys);
+        return new $this->driver($this->config, $this->root, ...$keys);
     }
 }
