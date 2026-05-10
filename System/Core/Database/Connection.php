@@ -4,38 +4,41 @@ namespace System\Core\Database;
 
 class Connection
 {
+    protected $config = [];
     protected $connection;
 
     public function __construct(array $config)
     {
-        $connection = "{$config['driver']}:host={$config['host']}";
-        if($config['base']){
-            $connection .= ";dbname={$config['base']}";
+        $this->config = $config;
+
+        $connection = "{$this->config['driver']}:host={$this->config['host']}";
+        if($this->config['base']){
+            $connection .= ";dbname={$this->config['base']}";
         }
-        if($config['socket']){
-            $connection .= ";unix_socket={$config['socket']}";
+        if($this->config['socket']){
+            $connection .= ";unix_socket={$this->config['socket']}";
         }
-        if($config['charset']){
-            $connection .= ";charset={$config['charset']}";
+        if($this->config['charset']){
+            $connection .= ";charset={$this->config['charset']}";
         }
-        if($config['collate']){
-            $connection .= ";collate={$config['collate']}";
+        if($this->config['collate']){
+            $connection .= ";collate={$this->config['collate']}";
         }
 
-        $this->connection = new \PDO($connection, $config['user'], $config['pass']);
+        $this->connection = new \PDO($connection, $this->config['user'], $this->config['pass']);
         $this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-        if($config['base']){
-            $this->connection->exec("USE {$config['base']}");
+        if($this->config['base']){
+            $this->database()->select();
         }
 
         $query = "SET ";
-        $query .= "NAMES {$config['charset']}, \n";
+        $query .= "NAMES {$this->config['charset']}, \n";
         $query .= "time_zone = '" . date('P') . "', \n";
-        $query .= "lc_messages = '{$config['locale']}', \n";
-        $query .= "sql_mode='" . implode(',', $config['databaseMode']) . "', \n";
-        $query .= "default_storage_engine = {$config['engine']}, \n";
-        $query .= "default_tmp_storage_engine = {$config['engine']};";
+        $query .= "lc_messages = '{$this->config['locale']}', \n";
+        $query .= "sql_mode='" . implode(',', $this->config['databaseMode']) . "', \n";
+        $query .= "default_storage_engine = {$this->config['engine']}, \n";
+        $query .= "default_tmp_storage_engine = {$this->config['engine']};";
 
         $this->execute($query)->result();
     }
@@ -65,5 +68,17 @@ class Connection
     public function pdo()
     {
         return $this->connection;
+    }
+
+    public function databases()
+    {
+        $query = "SHOW DATABASES";
+        return $this->execute($query)->result()->all();
+    }
+
+    public function database($database = null)
+    {
+        $database = $database ?: $this->config['base'];
+        return new Base($database, $this->config, $this);
     }
 }
