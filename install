@@ -92,7 +92,7 @@ class install
     protected function copyFiles()
     {
         if(!is_dir(ROOT . "/Controllers/Home/configs")){
-            mkdir(ROOT . "/Controllers/Home/configs", 0755, true);
+            mkdir(ROOT . "/Controllers/Home/configs", 0777, true);
         }
 
         foreach(glob(ROOT . "/Controllers/Home/.configs/*") as $file){

@@ -15,19 +15,19 @@ class Drop
         $this->table = $table;
     }
 
-    public function key($condition)
+    public function key()
     {
-        return $this->table->alter("DROP KEY {$this->index} {$condition}");
+        return $this->table->alter("DROP KEY {$this->index}");
     }
 
-    public function index($condition)
+    public function index()
     {
-        return $this->table->alter("DROP INDEX {$this->index} {$condition}");
+        return $this->table->alter("DROP INDEX {$this->index}");
     }
 
-    public function unique($condition)
+    public function unique()
     {
-        return $this->table->alter("DROP INDEX {$this->index} {$condition}");
+        return $this->table->alter("DROP INDEX {$this->index}");
     }
 
     public function primary()

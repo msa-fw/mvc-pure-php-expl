@@ -7,8 +7,10 @@
 
 **Install**
 
+--------------------------
+
 Run 
 
-```
-php /path/to/install
-```
+1. `php /path/to/install`
+2. `php /path/to/cli migrate`
+3. `php /path/to/cli server:run`

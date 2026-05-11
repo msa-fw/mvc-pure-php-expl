@@ -48,7 +48,7 @@ class Session
         $this->sessionDirectory = ROOT . '/' . trim($sessionDirectory, '/');
 
         if(!is_dir($this->sessionDirectory)){
-            mkdir($this->sessionDirectory, 0755, true);
+            mkdir($this->sessionDirectory, 0777, true);
         }
 
         ini_set('session.gc_maxlifetime', $this->config->session('sessionLifeTime')->read(300));

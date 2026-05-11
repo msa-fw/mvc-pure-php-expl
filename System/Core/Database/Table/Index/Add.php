@@ -15,23 +15,31 @@ class Add
         $this->table = $table;
     }
 
-    public function key($condition)
+    public function key(...$columns)
     {
-        return $this->table->alter("ADD KEY {$this->index} {$condition}");
+        return $this->table->alter("ADD KEY {$this->index}" . $this->createColumnsString(...$columns));
     }
 
-    public function index($condition)
+    public function index(...$columns)
     {
-        return $this->table->alter("ADD INDEX {$this->index} {$condition}");
+        return $this->table->alter("ADD INDEX {$this->index}" . $this->createColumnsString(...$columns));
     }
 
-    public function unique($condition)
+    public function unique(...$columns)
     {
-        return $this->table->alter("ADD UNIQUE INDEX {$this->index} {$condition}");
+        return $this->table->alter("ADD UNIQUE INDEX {$this->index}" . $this->createColumnsString(...$columns));
     }
 
-    public function primary($condition)
+    public function primary()
     {
-        return $this->table->alter("ADD PRIMARY KEY ({$this->index}) {$condition}");
+        return $this->table->alter("ADD PRIMARY KEY ({$this->index})");
+    }
+
+    protected function createColumnsString(...$columns)
+    {
+        if(!$columns){
+            $columns = [$this->index];
+        }
+        return " (" . implode(',', $columns) . ")";
     }
 }

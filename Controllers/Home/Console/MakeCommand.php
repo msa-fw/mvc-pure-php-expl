@@ -12,7 +12,7 @@ class MakeCommand
     protected $command;
     protected $params = [];
 
-    protected $target = ROOT . "/Controllers/Home/Console/tpl";
+    protected $target = ROOT . "/Controllers/Home/Console/tpl/controller";
     protected $destination = ROOT . "/Controllers";
 
     public function __construct($command, array $params)
@@ -61,6 +61,45 @@ class MakeCommand
         return true;
     }
 
+    public function table($table)
+    {
+        return $this->commonSaveMigrationFile($table, 'create');
+    }
+
+    public function alter($table, $suffix = null)
+    {
+        return $this->commonSaveMigrationFile($table, 'alter', $suffix);
+    }
+
+    protected function commonSaveMigrationFile($table, $prefix, $suffix = null)
+    {
+        $suffix = $suffix ? "_{$suffix}_" : "_";
+
+        $name = "{$prefix}_{$table}{$suffix}" . time();
+        $destinationDirectory = ROOT . "/temp/migration";
+
+        if(!is_dir($destinationDirectory)){
+            mkdir($destinationDirectory, 0777, true);
+        }
+
+        $target = ROOT . "/Controllers/Home/Console/tpl/migration/{$prefix}.php";
+        $destination = "{$destinationDirectory}/" . date('Ymd_His') . "_{$name}.php";
+
+        if(!file_exists($destination)){
+            $content = file_get_contents($target);
+            $content = str_replace(['__name__', '__table__'], [$name, $table], $content);
+
+            file_put_contents($destination, $content);
+
+            print translate('cli.make.fileSavedToPath', [
+                    '%target%' => trim(text($target, 46)),
+                    '%destination%' => trim(success($destination)),
+                ]) . PHP_EOL;
+        }
+
+        return true;
+    }
+
     protected function commonSaveFile($directory, $file, $controller, $action = '')
     {
         $action = $action ?: $controller;
@@ -74,7 +113,7 @@ class MakeCommand
 
         $destinationDirectory = dirname($destination);
         if(!is_dir($destinationDirectory)){
-            mkdir($destinationDirectory, 0755, true);
+            mkdir($destinationDirectory, 0777, true);
         }
 
         if(file_put_contents($destination, $content)){

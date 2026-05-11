@@ -35,7 +35,7 @@ class CronCommand
         $this->tasks = Core::Cron()->getAll();
 
         if(!is_dir($this->cronTasksDirectory)){
-            mkdir($this->cronTasksDirectory, 0755, true);
+            mkdir($this->cronTasksDirectory, 0777, true);
         }
     }
 

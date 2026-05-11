@@ -18,4 +18,8 @@ return [
     'cron.processDoneProcessesLeft' => 'Process %cmd% completed (%total% left)',
 
     'cli.make.fileSavedToPath' => 'File `%target%` saved to `%destination%`',
+
+    'cli.migration.migrationFileExecuted' => 'File %target% executed successfull!',
+    'cli.migration.migrationFileNotExecuted' => 'File %target% already executed!',
+    'cli.migration.migrationMethodExecute' => 'Call method %method% from %target%',
 ];

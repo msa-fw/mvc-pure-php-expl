@@ -26,7 +26,7 @@ class JSON implements CommonInterface
         $this->directory = ROOT . "/../tmp/cache/json/{$keys}";
 
         if(!is_dir($this->directory)){
-            mkdir($this->directory, 0755, true);
+            mkdir($this->directory, 0777, true);
         }
     }
 
