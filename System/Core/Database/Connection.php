@@ -50,6 +50,11 @@ class Connection
         }
     }
 
+    public function config($key)
+    {
+        return isset($this->config[$key]) ? $this->config[$key] : null;
+    }
+
     public function execute($query, array $bindings = [])
     {
         $sorted = [];
@@ -78,7 +83,7 @@ class Connection
 
     public function database($database = null)
     {
-        $database = $database ?: $this->config['base'];
-        return new Base($database, $this->config, $this);
+        $database = $database ?: $this->config('base');
+        return new Base($database, $this);
     }
 }

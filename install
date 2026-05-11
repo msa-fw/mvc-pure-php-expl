@@ -55,7 +55,8 @@ class install
 
         try{
             $database = new Database();
-            $database->new('test', $this->config);
+            $connection = $database->new('test', $this->config);
+            $connection->database($this->config['base'])->add();
 
             print \console\success("Connection to DB: OK");
             return true;
@@ -144,8 +145,8 @@ class install
     }
     protected function setDbDatabase()
     {
-        $dialog = new Dialog("Enter Database database name (or leave empty)");
-        $this->config['base'] = $dialog->answer() ?: '';
+        $dialog = new Dialog("Enter Database database name (def: msa_fw_simple_db)");
+        $this->config['base'] = $dialog->answer() ?: 'msa_fw_simple_db';
         return $this;
     }
 }

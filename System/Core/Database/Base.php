@@ -4,61 +4,79 @@ namespace System\Core\Database;
 
 class Base
 {
-    protected $database;
-    protected $config = [];
+    protected $db;
     protected $connection;
 
-    public function __construct($database, array $config, Connection $connection)
+    public function __construct($database, Connection $connection)
     {
-        $this->database = $database;
-        $this->config = $config;
+        $this->db = $database;
         $this->connection = $connection;
     }
 
-    public function select()
+    public function db()
     {
-        $query = "USE `{$this->database}`";
-        return $this->connection->execute($query)->result();
+        return $this->db;
     }
 
-    public function add()
+    public function connection()
     {
-        $query = "CREATE DATABASE IF NOT EXISTS `{$this->database}`";
-        return $this->connection->execute($query)->result();
+        return $this->connection;
     }
 
-    public function drop()
+    public function exist()
     {
-        $query = "DROP DATABASE IF EXISTS `{$this->database}`";
-        return $this->connection->execute($query)->result();
-    }
-
-    public function status()
-    {
-        $query = "SHOW TABLE STATUS FROM `{$this->database}`";
-        return $this->connection->execute($query)->result()->all();
-    }
-
-    public function tables()
-    {
-        $query = "SHOW TABLES FROM `{$this->database}`";
-        return $this->connection->execute($query)->result()->all();
+        foreach($this->connection->databases() as $item){
+            if($item['Database'] == $this->db){
+                return true;
+            }
+        }
+        return false;
     }
 
     public function rename($to)
     {
-        $tmp = new self($to, $this->config, $this->connection);
+        $tmp = new self($to, $this->connection);
         $tmp->add();
 
         foreach($this->tables() as $item){
-            $key = "Tables_in_{$this->database}";
+            $key = "Tables_in_{$this->db}";
             $this->table($item[$key])->rename("`{$to}`.`{$item[$key]}`");
         }
         return $this->drop();
     }
 
+    public function select()
+    {
+        $query = "USE `{$this->db}`";
+        return $this->connection->execute($query)->result();
+    }
+
+    public function add()
+    {
+        $query = "CREATE DATABASE IF NOT EXISTS `{$this->db}`";
+        return $this->connection->execute($query)->result();
+    }
+
+    public function drop()
+    {
+        $query = "DROP DATABASE IF EXISTS `{$this->db}`";
+        return $this->connection->execute($query)->result();
+    }
+
+    public function status()
+    {
+        $query = "SHOW TABLE STATUS FROM `{$this->db}`";
+        return $this->connection->execute($query)->result()->all();
+    }
+
+    public function tables()
+    {
+        $query = "SHOW TABLES FROM `{$this->db}`";
+        return $this->connection->execute($query)->result()->all();
+    }
+
     public function table($table)
     {
-        return new Table($this->database, $table, $this->config, $this->connection);
+        return new Table($table, $this);
     }
 }
