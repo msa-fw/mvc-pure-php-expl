@@ -4,6 +4,7 @@ namespace System\Core;
 
 use ReflectionMethod;
 use System\Core;
+use function console\text;
 use function console\danger;
 use function console\warning;
 use function language\translate;
@@ -26,6 +27,13 @@ class Console
         foreach($this->commands as $command => $action){
             if(preg_match("#^$command$#usim", $this->requestCommand[0])){
                 if($this->runCommand($command, array_slice($this->requestCommand, 1))){
+
+                    print PHP_EOL . str_repeat('=', 50) . PHP_EOL;
+                    print translate('cli.debugInfo', [
+                        '%time%' => trim(text(number_format(microtime(true) - DEBUG_START_TIME, 10), 45)),
+                        '%memory%' => trim(text(number_format((memory_get_usage() - DEBUG_START_MEMORY) / 1024, 2), 46)),
+                    ]) . PHP_EOL;
+
                     return true;
                 }
             }

@@ -3,7 +3,9 @@
 \System\Core::Config()->controller('Home')->write(['active' => true]);
 
 \System\Core::Config()->general()->write([
+    'debug' => true,
     'language' => 'en',
+    'webDirectory' => 'web',
 ]);
 
 \System\Core::Config()->template()->write([

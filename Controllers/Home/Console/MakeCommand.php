@@ -103,6 +103,19 @@ class MakeCommand
     }
 
     /**
+     * @param $controller
+     * @param $widget
+     * @help cli.help.makeCommandWidget
+     * @help cli.help.makeCommandWidget1
+     * @return bool
+     */
+    public function widget($controller, $widget)
+    {
+        $this->commonSaveFile($this->target . "/Widgets", "__ACTION__Widget.php", $controller, $widget);
+        return true;
+    }
+
+    /**
      * @param $table
      * @help cli.help.makeMigrationTable
      * @help cli.help.makeMigrationTable1
@@ -151,9 +164,13 @@ class MakeCommand
                     '%target%' => trim(text($target, 46)),
                     '%destination%' => trim(success($destination)),
                 ]) . PHP_EOL;
+            return true;
         }
 
-        return true;
+        print translate('cli.make.fileAlreadyExist', [
+                '%destination%' => trim(success($destination)),
+            ]) . PHP_EOL;
+        return false;
     }
 
     protected function commonSaveFile($directory, $file, $controller, $action = '')
@@ -163,6 +180,13 @@ class MakeCommand
         $target = "{$directory}/{$file}";
         $destination = str_replace($this->target, "{$this->destination}/{$controller}", $target);
         $destination = str_replace(['__CONTROLLER__', '__ACTION__'], [$controller, $action], $destination);
+
+        if(file_exists($destination)){
+            print translate('cli.make.fileAlreadyExist', [
+                    '%destination%' => trim(success($destination)),
+                ]) . PHP_EOL;
+            return false;
+        }
 
         $content = file_get_contents($target);
         $content = str_replace(['__CONTROLLER__', '__ACTION__'], [$controller, $action], $content);

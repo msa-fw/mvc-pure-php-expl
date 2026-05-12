@@ -44,7 +44,7 @@ class Manager
     protected function runEvent(array $event)
     {
         $result = null;
-        $debugger = $this->debugger->events()->start("{$event['class']}::{$event['method']}");
+        $debugger = $this->debugger->events()->start("{$this->event} => {$event['class']}::{$event['method']}");
 
         if(method_exists($event['class'], $event['method'])){
             $eventObject = new $event['class'](...$this->arguments);

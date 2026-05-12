@@ -17,7 +17,10 @@ return [
     'cron.processesLeft' => 'Processes left: %total%',
     'cron.processDoneProcessesLeft' => 'Process %cmd% completed (%total% left)',
 
+    'cli.debugInfo' => 'Time: %time%s Memory: %memory%Kb',
+
     'cli.make.fileSavedToPath' => 'File `%target%` saved to `%destination%`',
+    'cli.make.fileAlreadyExist' => 'File already exist in `%destination%`',
 
     'cli.migration.migrationFileExecuted' => 'File %target% executed successfull!',
     'cli.migration.migrationFileNotExecuted' => 'File %target% already executed!',
@@ -27,7 +30,8 @@ return [
     'cli.help.callHelper1' => "Use key %controller% if do you need help by concrete controller",
 
     'cli.help.runDeveloperServer' => "Run developer server",
-    'cli.help.runDeveloperServer1' => "Use param %host% for running server by custom host (use [host:port] format)",
+    'cli.help.runDeveloperServer1' => "Use param %host_port% for running server by custom host (use [host:port] format)",
+
     'cli.help.cronExecCommand' => "Run CRON-manager for all defined CRON-tasks",
     'cli.help.cronExecCommand1' => "Use param %key% [--single] for running one CRON-task by unique key",
     'cli.help.cronExecCommand2' => "Use params %key% [--single] [--silent] for running one CRON-task by unique key in silent mode (inhibit PHP errors)",
@@ -44,6 +48,8 @@ return [
     'cli.help.makeCommandCron1' => "Use key %controller% for define controller name and %cron% for define Cron class name",
     'cli.help.makeCommandEvent' => "Create new event class",
     'cli.help.makeCommandEvent1' => "Use key %controller% for define controller name and %event% for define Event class name",
+    'cli.help.makeCommandWidget' => "Create new widget class",
+    'cli.help.makeCommandWidget1' => "Use key %controller% for define controller name and %widget% for define Widget class name",
 
     'cli.help.makeMigrationTable' => "Create migration file for new table",
     'cli.help.makeMigrationTable1' => "Use key %table% for define table name",

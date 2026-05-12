@@ -16,6 +16,7 @@ namespace System;
  * @method static|Core\Request Request()
  * @method static|Core\Response Response()
  * @method static|Core\Session Session()
+ * @method static|Core\Widgets Widgets()
  */
 class Core
 {

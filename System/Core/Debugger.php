@@ -11,6 +11,7 @@ use System\Core\Debugger\Builder;
  * @method Builder cache()
  * @method Builder database()
  * @method Builder events()
+ * @method Builder widgets()
  */
 class Debugger
 {

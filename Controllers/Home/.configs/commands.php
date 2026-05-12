@@ -12,6 +12,7 @@ return [
     'make:cron' => [\Controllers\Home\Console\MakeCommand::class, 'cron'],
     'make:event' => [\Controllers\Home\Console\MakeCommand::class, 'event'],
     'make:model' => [\Controllers\Home\Console\MakeCommand::class, 'model'],
+    'make:widget' => [\Controllers\Home\Console\MakeCommand::class, 'widget'],
 
     'make:table' => [\Controllers\Home\Console\MakeCommand::class, 'table'],
     'make:alter' => [\Controllers\Home\Console\MakeCommand::class, 'alter'],

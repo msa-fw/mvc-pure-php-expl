@@ -55,27 +55,24 @@ class HelperCommand
             $contents = file_get_contents($path);
             $contents = preg_replace("#\s+#usim", '', $contents);
 
+            $repeater = str_repeat(" ", 4);
             foreach(explode("/**", $contents) as $content){
                 $content = "/**" . $content;
 
                 if(preg_match("#\/\*\*(.*?)\*\/((public)?)function{$method}\(#usim", $content, $match)){
                     $lines = explode('*', $match[1]);
 
-                    $params = [];
+                    $params = $translates = [];
                     foreach($lines as $line){
-                        if(preg_match("#\@para(\w+)\\$(\w+)#", $line, $match)){
+                        if(preg_match("#\@para(\w+)\\$(\w+)$#", $line, $match)){
                             $params["%{$match[2]}%"] = "[{$match[2]}]";
                         }
-                    }
 
-                    $translates = [];
-                    foreach($lines as $line){
                         if(preg_match("#\@help(.*?)$#", $line, $match)){
                             $translates[] = translate($match[1], $params, true);
                         }
                     }
-
-                    return trim(warning(implode(' ', array_values($params)))) . ' - ' . implode("\n     - ", $translates);
+                    return trim(warning(implode(' ', array_values($params)))) . ' - ' . implode("\n{$repeater}- ", $translates);
                 }
             }
         }

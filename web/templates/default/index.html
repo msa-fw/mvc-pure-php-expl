@@ -1,21 +1,84 @@
 <?php
 
+$widgets = \System\Core::Widgets();
+$widgets->initialize();
+
 /**
  * @var array $content
  * @var \System\Core\Template\HTML $render
  */
 
+$render->js("scripts/main.js");
+$render->css("styles/main.css");
+
 ?><!DOCTYPE html>
 <html>
     <head>
+        <?php print $render->renderStyles() ?>
+        <?php print $render->renderScripts() ?>
     </head>
     <body>
-        <header></header>
+
+        <header>
+            <?php if($widgetContent = $render->renderWidget($widgets->header()->run())){ ?>
+                <div class="widgets-header">
+                    <?php print $widgetContent ?>
+                </div>
+            <?php } ?>
+        </header>
+
         <main>
+            <?php if($widgetContent = $render->renderWidget($widgets->top()->run())){ ?>
+                <div class="widgets-top">
+                    <?php print $widgetContent ?>
+                </div>
+            <?php } ?>
+
             <div class="container">
-                <?php print $render->renderController() ?>
+                <?php if($widgetContent = $render->renderWidget($widgets->body()->run())){ ?>
+                    <div class="widgets-body">
+                        <?php print $widgetContent ?>
+                    </div>
+                <?php } ?>
+
+                <div class="body">
+                    <?php if($widgetContent = $render->renderWidget($widgets->leftbar()->run())){ ?>
+                        <div class="widgets-leftbar">
+                            <?php print $widgetContent ?>
+                        </div>
+                    <?php } ?>
+
+                    <div class="content">
+                        <?php print $render->renderController() ?>
+                    </div>
+
+                    <?php if($widgetContent = $render->renderWidget($widgets->rightbar()->run())){ ?>
+                        <div class="widgets-rightbar">
+                            <?php print $widgetContent ?>
+                        </div>
+                    <?php } ?>
+                </div>
             </div>
+
+            <?php if($widgetContent = $render->renderWidget($widgets->bottom()->run())){ ?>
+                <div class="widgets-bottom">
+                    <?php print $widgetContent ?>
+                </div>
+            <?php } ?>
         </main>
-        <footer></footer>
+
+        <footer>
+            <?php if($widgetContent = $render->renderWidget($widgets->footer()->run())){ ?>
+                <div class="widgets-footer">
+                    <?php print $widgetContent ?>
+                </div>
+            <?php } ?>
+
+            <div><?php print number_format(microtime(true) - DEBUG_START_TIME, 10) ?> s.</div>
+            <div><?php print number_format((memory_get_usage() - DEBUG_START_MEMORY) / 1024, 2) ?> Kb</div>
+        </footer>
+
+        <?php print $render->renderStyles() ?>
+        <?php print $render->renderScripts() ?>
     </body>
 </html>

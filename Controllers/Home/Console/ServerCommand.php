@@ -14,14 +14,14 @@ class ServerCommand
     }
 
     /**
-     * @param string $host
+     * @param string $host_port
      * @help cli.help.runDeveloperServer
      * @help cli.help.runDeveloperServer1
      * @return bool
      */
-    public function exec($host = '127.0.0.1:8080')
+    public function exec($host_port = '127.0.0.1:8080')
     {
-        shell_exec(PHP_BINARY . " -S $host " . ROOT . "/server.php");
+        shell_exec(PHP_BINARY . " -S $host_port " . ROOT . "/server.php");
         return true;
     }
 }
