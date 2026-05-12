@@ -12,5 +12,17 @@
 Run 
 
 1. `php /path/to/install`
-2. `php /path/to/cli migrate`
+2. `php /path/to/cli db:migrate`
 3. `php /path/to/cli server:run`
+
+--------------------------
+
+Write to crontab file line
+
+```
+* * * * * php /path/to/cli cron:run
+```
+
+--------------------------
+
+Run `php /path/to/cli help` for call console commands reference

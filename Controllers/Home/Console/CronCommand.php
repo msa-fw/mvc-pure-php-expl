@@ -39,6 +39,13 @@ class CronCommand
         }
     }
 
+    /**
+     * @param null $key
+     * @help cli.help.cronExecCommand
+     * @help cli.help.cronExecCommand1
+     * @help cli.help.cronExecCommand2
+     * @return bool|mixed
+     */
     public function exec($key = null)
     {
         if(isset($this->params['single'])){

@@ -4,7 +4,7 @@ namespace console;
 
 function text($message, $color)
 {
-    return "\e[1;{$color}m {$message} \e[0m" . PHP_EOL;
+    return "\e[1;{$color}m{$message}\e[0m" . PHP_EOL;
 }
 
 function danger($message)

@@ -47,6 +47,12 @@ class DatabaseCommand
         $this->connect = Core::Database()->connection();
     }
 
+    /**
+     * @param bool $forced
+     * @help cli.help.databaseMigrateCommand
+     * @help cli.help.databaseMigrateCommand1
+     * @return bool
+     */
     public function migrate($forced = false)
     {
         $target = ROOT . "/temp/migration";
