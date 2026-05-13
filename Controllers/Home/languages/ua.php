@@ -20,7 +20,7 @@ return [
     'cli.debugInfo' => 'Час: %time%с Пам\'ять: %memory%Кб',
 
     'cli.make.fileSavedToPath' => 'Файл `%target%` успішно збережено до `%destination%`',
-    'cli.make.fileAlreadyExist' => 'Файл вже ыснуэ в `%destination%`',
+    'cli.make.fileAlreadyExist' => 'Файл вже існує в `%destination%`',
 
     'cli.migration.migrationFileExecuted' => 'Файл %target% успішно виконано!',
     'cli.migration.migrationFileNotExecuted' => 'Файл %target% раніше було виконано!',

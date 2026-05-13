@@ -41,7 +41,7 @@ class Manager
         }
     }
 
-    protected function runEvent(array $event)
+    public function runEvent(array $event)
     {
         $result = null;
         $debugger = $this->debugger->events()->start("{$this->event} => {$event['class']}::{$event['method']}");

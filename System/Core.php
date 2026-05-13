@@ -24,10 +24,31 @@ class Core
 
     public static function __callStatic($name, $arguments)
     {
-        if(!isset(static::$instances[$name])){
-            $className = "\\System\\Core\\$name";
-            static::$instances[$name] = new $className(...$arguments);
-        }
-        return static::$instances[$name];
+        $class = "\\System\\Core\\$name";
+        return self::get($class, ...$arguments);
     }
+
+    public static function get($class, ...$arguments)
+    {
+        if(!isset(self::$instances[$class])){
+            return self::set($class, null, ...$arguments);
+        }
+        return self::$instances[$class];
+    }
+
+    public static function set($class, object $object = null, ...$arguments)
+    {
+        self::$instances[$class] = is_object($object) ? $object : new $class(...$arguments);
+        return self::$instances[$class];
+    }
+
+    public static function unset($class)
+    {
+        if(isset(self::$instances[$class])){
+            unset(self::$instances[$class]);
+            return true;
+        }
+        return false;
+    }
+
 }

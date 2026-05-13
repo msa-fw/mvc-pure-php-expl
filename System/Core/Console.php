@@ -42,7 +42,7 @@ class Console
         return false;
     }
 
-    protected function runCommand($command, array $arguments = [])
+    public function runCommand($command, array $arguments = [])
     {
         list($class, $method) = $this->commands[$command];
 

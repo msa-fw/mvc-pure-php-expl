@@ -2,6 +2,7 @@
 
 namespace System\Core;
 
+use System\Core;
 use System\Core\Widgets\Manager;
 use function module\loadControllersOptions;
 
@@ -20,6 +21,8 @@ use function module\loadControllersOptions;
 class Widgets
 {
     protected $widgets = [];
+    protected $request;
+    protected $requestUri;
 
     public function __call($name, $arguments)
     {
@@ -28,6 +31,8 @@ class Widgets
 
     public function __construct()
     {
+        $this->request = Core::Request();
+        $this->requestUri = $this->request->uri('path')->read('/');
     }
 
     public function initialize()
@@ -37,6 +42,6 @@ class Widgets
 
     public function run($widget, ...$arguments)
     {
-        return new Manager($widget, $arguments, $this->widgets);
+        return new Manager($widget, $arguments, $this->widgets, $this->requestUri);
     }
 }

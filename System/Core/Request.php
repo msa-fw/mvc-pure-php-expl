@@ -16,6 +16,9 @@ use System\Helpers\Classes\Search;
  * @method Search files(...$_)
  * @method Search cookies(...$_)
  * @method Search headers(...$_)
+ * @method Search server(...$_)
+ *
+ * @method Search uri(...$_)
  */
 class Request
 {
@@ -29,19 +32,32 @@ class Request
 
         $this->files()->write($_FILES);
         $this->cookies()->write($_COOKIE);
-        $this->headers()->write($this->getAllHeaders());
+
+        $this->setHeaders();
     }
 
-    protected function getAllHeaders() {
-        $headers = [];
+    protected function setHeaders() {
         foreach($_SERVER as $name => $value){
-            if(strpos($name, 'HTTP_') === 0){
-                $header = substr($name, 5);
-                $header = str_replace('_', '-', strtolower($header));
-                $headers[$header] = $value;
+            $header = strtolower($name);
+            $header = str_replace('_', '-', $header);
+            if(preg_match("#^http-(.*?)$#usm", $header, $match)){
+                $this->headers($match[1])->write($value);
+            }else{
+                $this->server($header)->write($value);
+
+                if($header == 'request-uri'){
+                    $this->setRequestUri($value);
+                }
             }
         }
+        return $this;
+    }
 
-        return $headers;
+    public function setRequestUri($requestUri)
+    {
+        $requestUri = urldecode($requestUri);
+        $this->uri()->write(parse_url($requestUri));
+
+        return $this;
     }
 }

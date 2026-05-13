@@ -29,16 +29,24 @@ class Builder
 
     /**
      * @param $class
-     * @param $method
-     * @param null $template
+     * @param string $method
      * @return self
      */
-    public function handler($class, $method, $template = null)
+    public function handler($class, $method = 'exec')
     {
         $this->widgets['class'] = $class;
         $this->widgets['method'] = $method;
-        $this->widgets['template'] = $template ?: str_replace('\\', '/', $class);
 
+        return $this;
+    }
+
+    /**
+     * @param $template
+     * @return self
+     */
+    public function template($template)
+    {
+        $this->widgets['template'] = $template;
         return $this;
     }
 

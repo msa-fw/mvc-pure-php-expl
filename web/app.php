@@ -7,7 +7,7 @@ include_once __DIR__ . "/../core.php";
 \System\Core::Config()->initialize();
 \System\Core::Session()->initialize();
 
-$router = new \System\Core\Router($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+$router = new \System\Core\Router();
 $router->start();
 
 $template = new \System\Core\Template();

@@ -14,27 +14,29 @@ class Router
     protected $routes = [];
 
     protected $config;
+    protected $request;
     protected $response;
 
-    public function __construct($requestMethod, $requestUri)
+    public function __construct()
     {
         $this->config = Core::Config();
+        $this->request = Core::Request();
         $this->response = Core::Response();
 
-        $this->requestMethod = $requestMethod;
-
-        $requestUri = urldecode($requestUri);
-        $requestUri = parse_url($requestUri, PHP_URL_PATH);
-        $this->requestUri = '/' . trim($requestUri, '/');
+        $this->requestUri = $this->request->uri('path')->read('/');
+        $this->requestMethod = $this->request->server('request-method')->read('');
 
         $this->routes = loadControllersOptions('routes.php');
     }
 
     public function start()
     {
-        foreach($this->routes as $uri => $class){
+        foreach($this->routes as $uri => $action){
+            list($class, $method) = $action;
+            $method = $method ?: $this->requestMethod;
+
             $pattern = $this->uri2pattern($uri);
-            if(preg_match($pattern, $this->requestUri, $match) && $this->runController($class, $this->requestMethod, array_slice($match, 1))){
+            if(preg_match($pattern, $this->requestUri, $match) && $this->runController($class, $method, array_slice($match, 1))){
                 return true;
             }
         }
@@ -42,7 +44,7 @@ class Router
         return false;
     }
 
-    protected function runController($className, $method, array $arguments = [])
+    public function runController($className, $method, array $arguments = [])
     {
         if(!$this->checkControllerActiveStatus($className)){
             return false;

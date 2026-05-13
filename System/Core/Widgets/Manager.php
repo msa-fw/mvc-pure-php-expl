@@ -7,16 +7,18 @@ use System\Core;
 class Manager
 {
     protected $widget;
+    protected $requestUri;
     protected $arguments = [];
     protected $widgets = [];
 
     protected $debugger;
 
-    public function __construct($widget, $arguments, &$widgets)
+    public function __construct($widget, $arguments, &$widgets, $requestUri = null)
     {
         $this->widget = mb_strtolower($widget);
         $this->arguments = $arguments;
         $this->widgets = &$widgets;
+        $this->requestUri = $requestUri;
 
         $this->debugger = Core::Debugger();
     }
@@ -25,6 +27,8 @@ class Manager
     {
         $builder = new Builder($this->arguments, $this->widgets[$this->widget]);
         $builder->handler($class, $method);
+        $builder->template(str_replace('\\', '/', $class) . ucfirst($this->widget));
+
         return $builder->enabled($active);
     }
 
@@ -45,16 +49,12 @@ class Manager
         return [];
     }
 
-    protected function executeWidget(array $widget)
+    public function executeWidget(array $widget)
     {
-        $requestUri = urldecode($_SERVER['REQUEST_URI']);
-        $requestUri = parse_url($requestUri, PHP_URL_PATH);
-        $requestUri = trim($requestUri, '/');
-
-        if($widget['enabledUris'] && !$this->checkCurrentUri($requestUri, $widget['enabledUris'])){
+        if($widget['enabledUris'] && !$this->checkCurrentUri($widget['enabledUris'])){
             return null;
         }
-        if($widget['disabledUris'] && $this->checkCurrentUri($requestUri, $widget['disabledUris'])){
+        if($widget['disabledUris'] && $this->checkCurrentUri($widget['disabledUris'])){
             return null;
         }
 
@@ -72,11 +72,11 @@ class Manager
         return $result;
     }
 
-    protected function checkCurrentUri($current, array $urisList)
+    protected function checkCurrentUri(array $urisList)
     {
         foreach($urisList as $uri){
             $uri = ltrim($uri, '/');
-            if(preg_match("#^$uri#usm", $current)){
+            if(preg_match("#^\/$uri#usm", $this->requestUri)){
                 return true;
             }
         }
