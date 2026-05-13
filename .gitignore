@@ -3,4 +3,4 @@
 .htaccess
 composer.lock
 /vendor
-/Controllers/Home/configs
+/Controllers

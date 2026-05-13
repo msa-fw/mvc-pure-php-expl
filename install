@@ -54,9 +54,15 @@ class install
         $this->setDbDatabase();
 
         try{
+            $db = $this->config['base'];
+            $this->config['base'] = null;
+
             $database = new Database();
             $connection = $database->new('test', $this->config);
-            $connection->database($this->config['base'])->add();
+
+            $connection->database($db)->add();
+
+            $this->config['base'] = $db;
 
             print \console\success("Connection to DB: OK");
             return true;
@@ -69,7 +75,7 @@ class install
 
     protected function saveConfig()
     {
-        $configFile = ROOT . "/Controllers/Home/.configs/config.php";
+        $configFile = ROOT . "/.Controllers/Home/configs/config.php";
         if(file_exists($configFile)){
             $content = file_get_contents($configFile);
             $replace = [
@@ -91,18 +97,34 @@ class install
 
     protected function copyFiles()
     {
-        if(!is_dir(ROOT . "/Controllers/Home/configs")){
-            mkdir(ROOT . "/Controllers/Home/configs", 0777, true);
-        }
+        \filesystem\scan_callback(ROOT . "/.Controllers", function($directory, $file, $isDirectory){
+            if($isDirectory){ return false; }
 
-        foreach(glob(ROOT . "/Controllers/Home/.configs/*") as $file){
-            $newPath = str_replace('/.configs/', '/configs/', $file);
-            rename($file, $newPath);
-        }
+            $target = "{$directory}/{$file}";
+            $destination = str_replace('/.Controllers/', '/Controllers/', $target);
+
+            $destinationDirectory = dirname($destination);
+            if(!is_dir($destinationDirectory)){
+                mkdir($destinationDirectory, 0777, true);
+            }
+
+            return rename($target, $destination);
+        });
+
+        \filesystem\scan_callback(ROOT . "/.Controllers", function($directory, $file, $isDirectory){
+            $path = $directory;
+            if($file){ $path .= "/{$file}"; }
+
+            if(file_exists($path)){
+                if($isDirectory){
+                    return rmdir($path);
+                }
+                return unlink($path);
+            }
+            return null;
+        });
 
         rename(ROOT . "/_.htaccess", ROOT . "/.htaccess");
-        rmdir(ROOT . "/Controllers/Home/.configs");
-
         return $this;
     }
 

@@ -58,7 +58,6 @@ class Manager
             return null;
         }
 
-
         $result = null;
         $debugger = $this->debugger->widgets()->start("{$this->widget} => {$widget['class']}::{$widget['method']}");
 
@@ -72,11 +71,10 @@ class Manager
         return $result;
     }
 
-    protected function checkCurrentUri(array $urisList)
+    protected function checkCurrentUri(array $patterns)
     {
-        foreach($urisList as $uri){
-            $uri = ltrim($uri, '/');
-            if(preg_match("#^\/$uri#usm", $this->requestUri)){
+        foreach($patterns as $pattern){
+            if(preg_match("#$pattern#usm", $this->requestUri)){
                 return true;
             }
         }
