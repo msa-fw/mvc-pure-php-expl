@@ -3,6 +3,7 @@
 namespace System\Core\Template;
 
 use System\Core\Config;
+use System\Core\Request;
 use System\Core\Response;
 
 class HTML implements CommonInterface
@@ -14,14 +15,16 @@ class HTML implements CommonInterface
     protected $webRootDirectory;
 
     protected $config;
+    protected $request;
     protected $response;
 
     protected $scripts = [];
     protected $styles = [];
 
-    public function __construct(Config $config, Response $response)
+    public function __construct(Config $config, Request $request, Response $response)
     {
         $this->config = $config;
+        $this->request = $request;
         $this->response = $response;
 
         $this->debug = $this->config->general('debug')->read(false);
@@ -68,6 +71,7 @@ class HTML implements CommonInterface
             if(file_exists($templateFile = $this->getAbsolutePath("assets/errors/response.html"))){
                 return render($templateFile, [
                     'code' => $code,
+                    'method' => $this->request->server('request-method')->read(''),
                     'render' => $this
                 ]);
             }

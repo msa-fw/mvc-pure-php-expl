@@ -3,16 +3,19 @@
 namespace System\Core\Template;
 
 use System\Core\Config;
+use System\Core\Request;
 use System\Core\Response;
 
 class JSON implements CommonInterface
 {
     protected $config;
+    protected $request;
     protected $response;
 
-    public function __construct(Config $config, Response $response)
+    public function __construct(Config $config, Request $request, Response $response)
     {
         $this->config = $config;
+        $this->request = $request;
         $this->response = $response;
     }
 

@@ -7,11 +7,13 @@ use System\Core;
 class Template
 {
     protected $config;
+    protected $request;
     protected $response;
 
     public function __construct()
     {
         $this->config = Core::Config();
+        $this->request = Core::Request();
         $this->response = Core::Response();
     }
 
@@ -45,7 +47,7 @@ class Template
 
         $renderClass = $this->config->template('renderClass')->read();
         if(method_exists($renderClass, 'render')){
-            $renderObject = new $renderClass($this->config, $this->response);
+            $renderObject = new $renderClass($this->config, $this->request, $this->response);
             return $renderObject->render();
         }
         return '';

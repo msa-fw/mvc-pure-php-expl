@@ -40,40 +40,44 @@ class Router
                 return true;
             }
         }
-        $this->response->code()->write(404);
         return false;
     }
 
     public function runController($className, $method, array $arguments = [])
     {
         if(!$this->checkControllerActiveStatus($className)){
-            return false;
+            $this->response->code()->write(403);
+            return true;
         }
 
         if(!method_exists($className, $method)){
-            return false;
+            $this->response->code()->write(405);
+            return true;
         }
 
         if(count($arguments) < $this->getRequiredParams($className, $method)){
-            return false;
+            $this->response->code()->write(502);
+            return true;
         }
 
-        $this->response->class()->write($className);
+        $this->response->controller()->write($className);
         $this->response->template()->write(str_replace('\\', DIRECTORY_SEPARATOR, $className));
 
-        Core::Events()->beforeControllerStart()->run();
-
         $object = new $className();
-        $result = call_user_func_array([$object, $method], $arguments);
+        Core::Events()->beforeControllerStart()->run();     // re-define response code in custom events (401, 403, etc) if needed
 
-        Core::Events()->afterControllerStart()->run();
-
+        $result = null;
+        if($this->response->code()->read() == 200){
+            $result = call_user_func_array([$object, $method], $arguments);
+        }
+        Core::Events()->afterControllerStart($result)->run();
         return $result;
     }
 
     protected function checkControllerActiveStatus($className)
     {
         if(preg_match("#Controllers\\\\(\w+)#usim", $className, $match)){
+            $this->response->controllerName()->write($match[1]);
             return $this->config->controller($match[1], 'active')->read();
         }
         return true;

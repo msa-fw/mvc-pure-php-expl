@@ -27,7 +27,7 @@ class Manager
     {
         $builder = new Builder($this->arguments, $this->widgets[$this->widget]);
         $builder->handler($class, $method);
-        $builder->template(str_replace('\\', '/', $class) . ucfirst($this->widget));
+        $builder->template(str_replace('\\', '/', $class) . '/' . $this->widget);
 
         return $builder->enabled($active);
     }

@@ -13,8 +13,9 @@ use System\Helpers\Classes\Search;
  * @method Search content(...$_)
  * @method Search headers(...$_)
  *
- * @method Search class()
  * @method Search template()
+ * @method Search controller()
+ * @method Search controllerName()
  */
 class Response
 {
@@ -22,7 +23,7 @@ class Response
 
     public function __construct()
     {
-        $this->code()->write(200);
+        $this->code()->write(404);
     }
 
     public function header($key, $value)
