@@ -1,6 +1,10 @@
 <?php
 
 \System\Core::Config()->controller('Home')->write(['active' => true]);
+\System\Core::Config()->controller('Home', 'updater')->write([
+    'targetLink' => 'https://github.com/msa-fw/mvc-pure-php-expl/archive/refs/heads/main.zip',
+    'rewriteControllerDirectory' => false,   // set `TRUE` if after script installing main controller Home was renamed to another
+]);
 
 \System\Core::Config()->general()->write([
     'debug' => true,

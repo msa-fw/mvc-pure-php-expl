@@ -25,4 +25,6 @@ Write to crontab file line
 
 --------------------------
 
+Run `php /path/to/cli make:controller Main`
+
 Run `php /path/to/cli help` for call console commands reference
