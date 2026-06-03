@@ -83,8 +83,14 @@ class HTML implements CommonInterface
     {
         $result = [];
         foreach($widgets as $widget){
-            if($widget['result'] && file_exists($templateFile = $this->getAbsolutePath("{$widget['template']}.html"))){
-                $result[] = render($templateFile, $widget['result']);
+            $templateFile = $this->getAbsolutePath("{$widget['template']}.html");
+            if($widget['result'] && file_exists($templateFile)){
+                $commonTemplate = $this->getAbsolutePath('assets/widgets/common.html');
+
+                $result[] = render($commonTemplate, [
+                    'template' => $templateFile,
+                    'widget' => $widget,
+                ]);
             }
         }
         return implode("\n", $result);

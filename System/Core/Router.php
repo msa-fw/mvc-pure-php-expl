@@ -40,6 +40,7 @@ class Router
                 return true;
             }
         }
+        $this->response->code()->write(404);
         return false;
     }
 
@@ -67,7 +68,7 @@ class Router
         Core::Events()->beforeControllerStart()->run();     // re-define response code in custom events (401, 403, etc) if needed
 
         $result = null;
-        if($this->response->code()->read() == 200){
+        if($this->response->code()->read(0) == 200){
             $result = call_user_func_array([$object, $method], $arguments);
         }
         Core::Events()->afterControllerStart($result)->run();

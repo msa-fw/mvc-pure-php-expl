@@ -12,6 +12,7 @@ class Manager
     protected $widgets = [];
 
     protected $debugger;
+    protected $session;
 
     public function __construct($widget, $arguments, &$widgets, $requestUri = null)
     {
@@ -21,6 +22,7 @@ class Manager
         $this->requestUri = $requestUri;
 
         $this->debugger = Core::Debugger();
+        $this->session = Core::Session();
     }
 
     public function add($class, $method = 'exec', $active = true)
@@ -51,12 +53,7 @@ class Manager
 
     public function executeWidget(array $widget)
     {
-        if($widget['enabledUris'] && !$this->checkCurrentUri($widget['enabledUris'])){
-            return null;
-        }
-        if($widget['disabledUris'] && $this->checkCurrentUri($widget['disabledUris'])){
-            return null;
-        }
+        if(!$this->checkWidgetAccess($widget)){ return null; }
 
         $result = null;
         $debugger = $this->debugger->widgets()->start("{$this->widget} => {$widget['class']}::{$widget['method']}");
@@ -69,6 +66,35 @@ class Manager
 
         $debugger->end();
         return $result;
+    }
+
+    protected function checkWidgetAccess(array $widget)
+    {
+        if($widget['options']['enabledUris'] && !$this->checkCurrentUri($widget['options']['enabledUris'])){
+            return false;
+        }
+
+        if($widget['options']['disabledUris'] && $this->checkCurrentUri($widget['options']['disabledUris'])){
+            return false;
+        }
+
+        if($widget['options']['enabledUserRoles'] && !$this->checkUserRoles($widget['options']['enabledUserRoles'])){
+            return false;
+        }
+
+        if($widget['options']['disabledUserRoles'] && $this->checkUserRoles($widget['options']['disabledUserRoles'])){
+            return false;
+        }
+        return true;
+    }
+
+    protected function checkUserRoles(array $roles)
+    {
+        $userRoles = $this->session->user('roles')->read([]);
+        foreach($roles as $role){
+            if(in_array($role, $userRoles)){ return true; }
+        }
+        return false;
     }
 
     protected function checkCurrentUri(array $patterns)

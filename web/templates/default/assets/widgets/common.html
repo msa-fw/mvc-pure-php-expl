@@ -1,0 +1,18 @@
+<?php
+    /**
+     * @var string $template
+     * @var array $widget
+     */
+?>
+
+<div class="widget">
+    <?php if($widget['options']['title'] && $widget['options']['showTitle']){ ?>
+        <div class="widget-header">
+            <div class="widget-title"><?php print $widget['options']['title'] ?></div>
+        </div>
+    <?php } ?>
+
+    <div class="widget-body">
+        <div class="widget-content"><?php print render($template, $widget['result']) ?></div>
+    </div>
+</div>

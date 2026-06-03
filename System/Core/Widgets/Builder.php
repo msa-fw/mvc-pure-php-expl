@@ -21,9 +21,15 @@ class Builder
             'method' => null,
             'template' => null,
             'status' => null,
-            'enabledUris' => [],
-            'disabledUris' => [],
             'arguments' => $arguments,
+            'options' => [
+                'title' => null,
+                'showTitle' => true,
+                'enabledUris' => [],
+                'disabledUris' => [],
+                'enabledUserRoles' => [],
+                'disabledUserRoles' => [],
+            ]
         ];
     }
 
@@ -66,7 +72,7 @@ class Builder
      */
     public function enabledUris(...$links)
     {
-        $this->widgets['enabledUris'] = $links;
+        $this->option('enabledUris', $links);
         return $this;
     }
 
@@ -76,7 +82,51 @@ class Builder
      */
     public function disabledUris(...$links)
     {
-        $this->widgets['disabledUris'] = $links;
+        $this->option('disabledUris', $links);
+        return $this;
+    }
+
+    /**
+     * @param array ...$roles
+     * @return self
+     */
+    public function enabledUserRoles(...$roles)
+    {
+        $this->option('enabledUserRoles', $roles);
+        return $this;
+    }
+
+    /**
+     * @param array ...$roles
+     * @return self
+     */
+    public function disabledUserRoles(...$roles)
+    {
+        $this->option('disabledUserRoles', $roles);
+        return $this;
+    }
+
+    /**
+     * @param $title
+     * @param bool $showTitle
+     * @return self
+     */
+    public function title($title, $showTitle = true)
+    {
+        $this->option('title', $title);
+        $this->option('showTitle', $showTitle);
+
+        return $this;
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     * @return self
+     */
+    public function option($key, $value)
+    {
+        $this->widgets['options'][$key] = $value;
         return $this;
     }
 }
